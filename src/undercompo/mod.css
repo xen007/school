@@ -1,0 +1,135 @@
+.main-container {
+  grid-area: main;
+  overflow-y: auto;
+  padding: 20px 20px;
+  background-color:#f2f2f2 ;
+
+}
+
+.containers{
+  position: relative;
+  border-radius: 6px;
+  padding: 20px;
+  width: 700px;
+  background-color: #f2f2f2;
+
+  
+}
+.modalContainer {
+  
+  width: 600px;
+  height: 600px;
+
+  
+}
+
+.modalContainer .title {
+  display: inline-block;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.titleCloseBtn {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.titleCloseBtn button {
+  background-color: transparent;
+  border: none;
+  font-size: 25px;
+  cursor: pointer;
+}
+
+.modalContainer .body {
+  flex: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.7rem;
+  text-align: center;
+}
+
+.modalContainer .footer {
+  flex: 20%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modalContainer .footer button {
+  width: 150px;
+  height: 45px;
+  margin: 10px;
+  border: none;
+  background-color: cornflowerblue;
+  color: white;
+  border-radius: 8px;
+  font-size: 20px;
+  cursor: pointer;
+}  
+
+#cancelBtn {
+  background-color: crimson;
+}
+
+#ti{
+  text-align: center;
+  font-weight: 600;
+  font-size: 16px;
+  margin-bottom: 0px;
+}
+#tit{
+  text-align: center;
+  font-weight: 600;
+  font-size: 16px;
+  margin-bottom: 0px;
+  color: rgb(1, 93, 180);
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+#tii{
+  text-align: center;
+  font-style: italic;
+  font-size: 14px;
+  margin-bottom: 0px;
+}
+
+#head{
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+  font-size: 10px;
+
+}
+#tab{
+  background: #26cdf7;
+  display: flex;
+  font-size: 10px;
+  width: 100%;
+}
+#tab table{
+  height: 100px;
+  vertical-align: middle;
+ 
+}
+#head p{
+  margin-bottom: 0px;
+}
+#middle{
+text-align: center;
+font-size: 12px;
+}
+#middle p{
+margin-bottom: 0px;
+  }
+#tiEcol{
+  color: green;
+  font-weight: 700;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+#botto{
+  display: flex;
+  text-align: left;
+  
+}
+

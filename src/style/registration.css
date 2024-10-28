@@ -1,0 +1,14 @@
+.image{
+    height: 100%;
+}
+.card{
+    margin-top: 13%;
+    margin-bottom: 13%;
+    color: none;
+}
+.success{
+    color:rgb(211, 6, 6)
+}
+.error{
+    color:rgb(211, 6, 6); 
+}

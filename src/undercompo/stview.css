@@ -1,0 +1,66 @@
+
+
+.modal-header{
+    background: #1a6ada;
+    color: #fff;
+    margin-bottom: 10px;
+    padding: 10px; 
+}
+
+.modal-body form {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 0;
+}
+
+.modal-body form .imgholder{
+    width: 200px;
+    height: 200px;
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.modal-body form .inputField{
+    flex-basis: 68%;
+    border-left: 5px groove blue;
+    padding-left: 20px;
+}
+
+form .inputField > div{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+form .inputField > div label{
+    font-size: 20px;
+    font-weight: 500;
+}
+
+#userForm form .inputField > div label::after{
+    content: "*";
+    color: red;
+}
+
+form .inputField > div input{
+    width: 75%;
+    padding: 10px;
+    border: none;
+    outline: none;
+    background: transparent;
+    border-bottom: 2px solid blue;
+}
+
+.modal-footer .submit{
+    font-size: 18px;
+}
+
+
+#readData form .inputField > div input{
+    color: #000;
+    font-size: 18px;
+}

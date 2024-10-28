@@ -1,0 +1,16 @@
+.dialogWrapper{
+    padding : 2px;
+    
+    margin-top: 5px;
+}
+.title{
+display:flex;
+margin-bottom: 0;
+
+}
+
+.pop{background-color: paleturquoise;}
+
+.dialog{
+padding-right: 0px;
+}

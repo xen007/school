@@ -1,0 +1,27 @@
+
+.lab{font-weight: bold;
+align-items: left;
+justify-content: space-between;
+font-size: larger;
+}
+.mat{
+    align-items: center;
+    margin-left: 20%;
+}
+.name{
+    margin-right: 10%;
+    margin-left: 20%;
+}
+.surname{
+    margin-right: 30%;  
+}
+.note{
+    margin-left: 50%;
+}
+.pop{background-color:rgba(220, 245, 242, 0.788)}
+.pops{
+    background-color:rgb(241, 247, 246) 
+}
+.imgholder{
+    background-color:rgba(220, 245, 242, 0.788) 
+}
