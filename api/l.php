@@ -27,7 +27,7 @@ require('db.php');
 
             }else{
                 //recupères toutes les informations de la table
-                $alluser = mysqli_query($db_connect,"SELECT * FROM eleve INNER JOIN classe on eleve.classe = classe.id_classe  INNER JOIN categorie_classe ON classe.categorie = categorie_classe.id_categorie ");
+                $alluser = mysqli_query($db_connect,"SELECT * FROM eleve LEFT JOIN classe on eleve.classe = classe.id_classe  LEFT JOIN categorie_classe ON classe.categorie = categorie_classe.id_categorie ");
                 //vérifie si les informations sont disponibles et les récupères
                 if(mysqli_num_rows($alluser) > 0){
                     while($row = mysqli_fetch_array($alluser)){

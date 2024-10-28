@@ -1,7 +1,7 @@
 <?php
 class Dbase {
     private $server = 'localhost';
-    private $dbname = 'used';
+    private $dbname = 'pschool';
     private $user = 'root';
     private $pass = '';
 

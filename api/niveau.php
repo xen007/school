@@ -11,7 +11,7 @@ require('db.php');
 
                 if(mysqli_num_rows($alluser) > 0){
                     while($row = mysqli_fetch_array($alluser)){
-                        $json_array["userdata"][] = array('id' =>$row['id_niveau'], 'libellee_niveau' =>$row['libellee_niveau'],'cycle' =>$row['cycle']); 
+                        $json_array["userdata"][] = array('id' =>$row['id_niveau'], 'libellee_niveau' =>$row['libellee_niveau'],'filiere'=>$row['filiere'],'cycle' =>$row['cycle']); 
                         
                     }
                     echo json_encode($json_array["userdata"]);

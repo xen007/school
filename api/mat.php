@@ -13,10 +13,12 @@ require('db.php');
                 $matid =urldecode($pat[4]); //initialise l'index " de l'url à la clé
                 // echo "user id is...".$matid; die;
                 //requete de recupération des données dans la table avec des jointures et une condition
-                $getuserrow=mysqli_query($db_connect, "SELECT * FROM matiere WHERE id_matiere='$matid' ");
+                $getuserrow=mysqli_query($db_connect, "SELECT * FROM matiere  WHERE id_matiere='$matid' ");
                 while($row = mysqli_fetch_array($getuserrow)){
                     //recupération du resulltat de la requete
-                            $json_array["matdata"] = array('id' =>$row['id_matiere'], 'idMat' =>$row['id_matiere'],'nom' =>$row['nom_matiere'],'classe' =>$row['classe'],'ens' =>$row['matricule_Ens'],'coef' =>$row['coefficient']);     
+                            $json_array["matdata"] = array('id' =>$row['id_matiere'], 'idMat' =>$row['id_matiere'],'nom' =>$row['nom_matiere'],'classe' =>$row['classe'],'ens' =>$row['matricule_Ens']
+                            ,'filiere' =>$row['filiere'],'description' =>$row['description_mat'],'niveau'=>$row['niveau']
+                        );     
                         }
                 //affiche les informations récupérés
                 echo json_encode($json_array['matdata']);
@@ -24,12 +26,14 @@ require('db.php');
 
             }else{
                 //recupères toutes les informations de la table
-                $allmat = mysqli_query($db_connect,"SELECT * FROM matiere INNER JOIN classe  on matiere.classe= classe.id_classe left join  enseignant on matiere.matricule_Ens = enseignant.matricule_Ens");
+                $allmat = mysqli_query($db_connect,"SELECT * FROM matiere left join  enseignant on matiere.matricule_Ens = enseignant.matricule_Ens left join niveau on matiere.niveau = niveau.id_niveau ");
 
                 if(mysqli_num_rows($allmat) > 0){
                     //vérifie si les informations sont disponibles et les récupères
                     while($row = mysqli_fetch_array($allmat)){
-                        $json_array["matdata"][] = array('id' =>$row['id_matiere'], 'idMat' =>$row['id_matiere'],'nom' =>$row['nom_matiere'],'classe' =>$row['libellee_classe'],'niv'=>$row['niveau'],'nomE' =>$row['nomE'],'prenomE' =>$row['prenomE'],'coef' =>$row['coefficient']); 
+                        $json_array["matdata"][] = array('id' =>$row['id_matiere'], 'idMat' =>$row['id_matiere'],'nom' =>$row['nom_matiere'],'classe' =>$row['classe'],'niv'=>$row['niveau'],'nomE' =>$row['nomE'],'prenomE' =>$row['prenomE'],
+                            'filiere' =>$row['filiere'],'description' =>$row['description_mat'],'niveau' =>$row['libellee_niveau']
+                ); 
                         
                     }
                     //affiche les informations récupérés
@@ -50,16 +54,19 @@ require('db.php');
                     
                     //récupération des  données envoyés
                     $nom = $userpostdata->nom;
-                    $classe = $userpostdata->classe;
-                    $coef = $userpostdata->coef; 
+                    $niveau = $userpostdata->niveau;
+                    // $classe = $userpostdata->classe;
+                     
+                    $description = $userpostdata->description; 
+                    $filiere = $userpostdata->filiere; 
                     //verifier si la matiereest déjà enregidtrée
-                    $result = mysqli_query($db_connect, "SELECT * FROM matiere where nom_matiere='$nom' and classe = '$classe'");
+                    $result = mysqli_query($db_connect, "SELECT * FROM matiere where nom_matiere='$nom' and niveau = '$niveau'");
                     if(mysqli_num_rows($result)>0){
-                        // si la classe existe on revoie l'erreur
-                        echo json_encode(["success"=>"matieredeja dans la classe"]);
+                        // si la niveau existe on revoie l'erreur
+                        echo json_encode(["success"=>"matieredeja pour le niveau"]);
                     }else{
                     //sion inserer la matiere
-                    $result = mysqli_query($db_connect, "INSERT INTO matiere (nom_matiere,classe,coefficient,matricule_Ens) VALUES ('$nom', '$classe','$coef',null) ");
+                    $result = mysqli_query($db_connect, "INSERT INTO matiere (nom_matiere,description_mat,matricule_Ens,filiere,niveau) VALUES ('$nom','$description',null,'$filiere','$niveau') ");
         
                         if($result){
                             //afficher en cas de succes
@@ -73,10 +80,13 @@ require('db.php');
                         //données envoyées
                         $matid = $userupdata->idMat;
                         $nom = $userupdata->nom;
-                        $classe = $userupdata->classe;
-                        $coef = $userupdata->coef; 
+                        $niveau = $userupdata->niveau;
+                        // $classe = $userupdata->classe;
+                        $description = $userupdata->description; 
+                        $filiere = $userupdata->filiere; 
                         //requete de mis a jour
-                        $updatedata = mysqli_query($db_connect, "UPDATE matiere SET nom_matiere= '$nom', classe = '$classe', coefficient= '$coef' WHERE id_matiere='$matid' ");
+ $updatedata = mysqli_query($db_connect, "UPDATE matiere SET nom_matiere = '$nom', niveau = '$niveau',filiere = '$filiere', description_mat= '$description'  WHERE id_matiere='$matid' ");
+               
                         if($updatedata){
                             //en cas de succes afficher
                             echo json_encode(["success"=>"matiere modifiée avec succès"]);

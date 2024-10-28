@@ -5,7 +5,7 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: *");
 header("Access-Control-Allow-Methods: *");
 
-$databases = ['tgsch'];
+$databases = ['pschool'];
 $user = "root";
 $pass = "";
 $host = "localhost";
@@ -24,6 +24,6 @@ foreach($databases as $database){
 }
 if($output){
     //afficher en cas de succes
-    echo json_encode(["success"=>"matiere ajoutée avec succès"]);
+    echo json_encode(["success"=>"reussi"]);
     return;
 }else echo json_encode(['success'=>'Verifiez les informations SVP']); return;

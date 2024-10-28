@@ -12,16 +12,14 @@ $pat = explode('/',$_SERVER['REQUEST_URI']);
          if(isset($pat[4])  && ($pat[4] !== '')){
              $json_array = array();
              $classe_id =intval($pat[4]);
-    $sql = "SELECT * FROM classe where niveau = $classe_id";
+             $matricule = $pat[5];
+    $sql = "SELECT * FROM matiere where classe = $classe_id and matricule_Ens ='$matricule'";
     $stmt = $conn->prepare($sql);
     $stmt-> execute();
     $users= $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         echo json_encode($users);
-        return;}elseif ($pat[4] === '') {
-            echo json_encode([]);
-                return;
-        }
+        return;}
         else{
                 
             echo json_encode(["resultat"=>"Verifiez les informations SVP"]);

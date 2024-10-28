@@ -12,11 +12,10 @@ $conn = $db->connect();
 $method=$_SERVER['REQUEST_METHOD'];
     //echo "ssm-----".$method; die;
 
-    switch($method){
+ 
 
 
-        case "POST":
-            if(isset($_FILES['img'])){
+            if(isset($_POST['mat'])){
             $matricule = checkInput($_POST['mat']);
             $nom = checkInput($_POST['name']);
             $prenom = checkInput($_POST['prenom']);
@@ -27,48 +26,53 @@ $method=$_SERVER['REQUEST_METHOD'];
             $tel = checkInput($_POST['tel']);
             $email = checkInput($_POST['email']);
             $pass = checkInput($_POST['pass']);
-            $matiere1 = checkInput($_POST['matiere1']);
-            $matiere2 = checkInput($_POST['matiere2']);
-            $matiere3 = checkInput($_POST['matiere3']);
-            $lundi = checkInput($_POST['lundi']);
-            $mardi = checkInput($_POST['mardi']);
-            $mercredi = checkInput($_POST['mercredi']);
-            $jeudi = checkInput($_POST['jeudi']);
-            $vendredi = checkInput($_POST['vendredi']);
-            $photo = $_FILES['img']['name'];
-            $photo_temp= $_FILES['img']['tmp_name'];
-            $dest1 =$_SERVER['DOCUMENT_ROOT'].'/ssm/api/imageTeacher'."/".$photo;
-
-            $cv = $_FILES['cv']['name'];
+            if($_POST['img'] || $_POST['img'] === 'undefined'){
+                $photo = '';
+            }else{
+                
+                $photo = $_FILES['img']['name'];
+                $photo_temp= $_FILES['img']['tmp_name'];
+                $dest1 =$_SERVER['DOCUMENT_ROOT'].'/ssm/api/imageTeacher'."/".$photo;  
+            }
+            
+            if($_POST['cv'] || $_POST['cv'] === 'undefined'){
+                $cv = '';
+            }else{  
+                $cv = $_FILES['cv']['name'];
             $cv_temp = $_FILES['cv']['tmp_name'];
             $dest2 = $_SERVER['DOCUMENT_ROOT'].'/ssm/api/cni'."/".$cv;
+            }
+            
+            if($_POST['cni'] || $_POST['cni'] === 'undefined'){
+                $cni = '';
+            }else{
+                $cni = $_FILES['cni']['name'];
+                $cni_temp= $_FILES['cni']['tmp_name'];
+                $dest3 = $_SERVER['DOCUMENT_ROOT'].'/ssm/api/cv'."/".$cni;
+            }
+            
 
-            $cni = $_FILES['cni']['name'];
-            $cni_temp= $_FILES['cni']['tmp_name'];
-            $dest3 = $_SERVER['DOCUMENT_ROOT'].'/ssm/api/cv'."/".$cni;
 
-
-            $sql = "INSERT INTO `enseignant` (matricule_Ens,civilitee, nomE, prenomE, dateNaiss, lieuNaiss, adresse, matiere1,matiere2,matiere3, mot_de_passe, email, telephone, photo, cni, cv) VALUES ('$matricule', '$genre', '$nom' ,'$prenom', '$date_naiss', '$lieu_naiss', '$adresse', '$matiere1', '$matiere2', '$matiere3', '$pass','$email', '$tel', '$photo','$cni', '$cv')";
+            $sql = "INSERT INTO `enseignant` (matricule_Ens,civilitee, nomE, prenomE, dateNaiss, lieuNaiss, adresse, mot_de_passe, email, telephone, photo, cni, cv) VALUES ('$matricule', '$genre', '$nom' ,'$prenom', '$date_naiss', '$lieu_naiss', '$adresse', '$pass','$email', '$tel', '$photo','$cni', '$cv')";
             $stmt = $conn->prepare($sql);
             $stmt->execute();
                 if($stmt){
-                    $sql1 = "INSERT INTO `jourdispo` (matricule_Ens,lundi, mardi, mercredi, jeudi, vendredi) VALUES ('$matricule', '$lundi', '$mardi' ,'$mercredi', '$jeudi', '$vendredi')";
-                    $stmt1 = $conn->prepare($sql1);
-                    $stmt1->execute();
                     move_uploaded_file($photo_temp,$dest1);
                     move_uploaded_file($cv_temp,$dest2);
                     move_uploaded_file($cni_temp,$dest3);
-                    echo json_encode(["success"=>"ajouté avec succès"]);
+                    $response = ["success"=>"ajoute avec succes"]; 
+                    echo json_encode($response);
                     return;
                 }else{
-                    echo json_encode(["succes"=>"erreur lors de l'enregistrement"]);
+                    $response = ["succes"=>"erreur lors de l'enregistrement"];
+                    echo json_encode($response);
                 }
             }
 
             else{
-                echo json_encode(["success", "Donnees dans un format incorrect"]);
+                $response = ["success", "Donnees dans un format incorrect"];
+                echo json_encode($response);
             }
-        }
 
 
         function checkInput($data){
