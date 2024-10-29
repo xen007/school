@@ -11,8 +11,8 @@ $conn = $db->connect();
 $pat = explode('/',$_SERVER['REQUEST_URI']);
     if(isset($pat[4])  && ($pat[4] !== '')){
         $json_array = array();
-        $level = $pat[4];
-        $sql = "SELECT distinct classe.libellee_classe,classe.id_classe FROM classe WHERE niveau = '$level'";
+        $subject = $pat[4];
+        $sql = "SELECT id_evaluation, nom_evaluation FROM evaluation WHERE matiere = $subject";
     $stmt = $conn->prepare($sql);
     $stmt-> execute();
     $users= $stmt->fetchAll(PDO::FETCH_ASSOC);

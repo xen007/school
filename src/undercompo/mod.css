@@ -105,11 +105,11 @@
   background: #26cdf7;
   display: flex;
   font-size: 10px;
-  width: 100%;
 }
 #tab table{
-  height: 100px;
+  margin: 0px !important;
   vertical-align: middle;
+  text-align: center;
  
 }
 #head p{
@@ -132,4 +132,11 @@ margin-bottom: 0px;
   text-align: left;
   
 }
+.table-container {
+  height: 50px !important; /* Adjust the height as needed */
+  overflow-y: auto !important;
+}
 
+th, td {
+  padding: 2px !important;
+}

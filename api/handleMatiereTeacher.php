@@ -11,12 +11,11 @@ $conn = $db->connect();
 $pat = explode('/',$_SERVER['REQUEST_URI']);
     if(isset($pat[4])  && ($pat[4] !== '')){
         $json_array = array();
-        $matricule_Ens =$pat[4];
-        $classe_id = $pat[5];
+        $classe_id =$pat[4];
         if (ctype_digit($classe_id)) {
-        $sql = "SELECT distinct cours.matriculeEnseignant, matiere.nom_matiere, matiere.id_matiere FROM cours inner join matiere on cours.matiere = matiere.id_matiere where cours.classe_id = $classe_id AND matriculeEnseignant = '$matricule_Ens'";
+        $sql = "SELECT distinct id_matiere, nom_matiere FROM  matiere where classe = $classe_id";
         }else{
-            $sql = "SELECT distinct cours.matriculeEnseignant, matiere.nom_matiere, matiere.id_matiere FROM cours inner join matiere on cours.matiere = matiere.id_matiere inner join classe on cours.classe_id = classe.id_classe where classe.libellee_classe ='$classe_id' AND matriculeEnseignant = '$matricule_Ens'";   
+            $sql = "SELECT distinct id_matiere, nom_matiere FROM  matiere where classe.libellee_classe ='$classe_id'";   
         }
         $stmt = $conn->prepare($sql);
     $stmt-> execute();

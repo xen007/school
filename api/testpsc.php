@@ -82,7 +82,7 @@ if (mysqli_num_rows($elevesQuery) > 0) {
 
         // Requête pour sélectionner les notes de chaque élève
         $notesQuery = mysqli_query($db_connect, "SELECT *, 
-            ROUND((IFNULL(m1, 0) + IFNULL(m2, 0) + IFNULL(m3, 0)) / (3 - (ISNULL(m1) + ISNULL(m2) + ISNULL(m3))), 2) AS avr 
+            ROUND((IFNULL(m1, 0) + IFNULL(m2, 0) + IFNULL(m3, 0)) / (3 - (ISNULL(m1) + ISNULL(m2) + ISNULL(m3))),2) AS avr 
             FROM notes 
             INNER JOIN matiere ON notes.id_matiere = matiere.id_matiere 
             INNER JOIN evaluation ON notes.id_eval = evaluation.id_evaluation 
@@ -107,9 +107,8 @@ if (mysqli_num_rows($elevesQuery) > 0) {
                 'note1' => $note['m1'],
                 'note2' => $note['m2'],
                 'note3' => $note['m3'],
-                'moy' => ($note['m1'] + $note['m2'] + $note['m3']) / 3,
                 'bar' => $note['bareme'],
-                'avg' => $note['avr']
+                'moy' => $note['avr']
             ];
         }
         
