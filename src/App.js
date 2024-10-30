@@ -99,8 +99,6 @@ function App() {
               <Route path='/notes' element={<Notes />} />
               <Route path='/settings/' element={<Setting />} />
               <Route  path='/categCl/' element={<CategCl />} />
-
-
               <Route path='/notes/:matricule' element={<Notes />} />
               <Route path='/notes/:matricule/:matricule_el/:seq_elev/:matiere' element={<Notes />} />
               <Route path='/bulletins/seq/:ns' element={<Seq />} />

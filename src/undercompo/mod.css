@@ -130,7 +130,12 @@ margin-bottom: 0px;
 #botto{
   display: flex;
   text-align: left;
-  
+  margin-bottom: 5px;
+}
+#botto p{
+  display: flex;
+  text-align: left;
+  margin-bottom: 5px;
 }
 .table-container {
   height: 50px !important; /* Adjust the height as needed */
