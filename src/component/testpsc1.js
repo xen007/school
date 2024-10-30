@@ -744,7 +744,6 @@ const Evaluation = () => {
 // import logo from './logo-tgsch.png';
 
 // const Evaluation = () => {
-//   const [data, setData] = useState({});
 //   const [groupedData, setGroupedData] = useState({});
 //   const [averages, setAverages] = useState({});
 //   const [classAverages, setClassAverages] = useState({ highest: 'N/A', middle: 'N/A', lowest: 'N/A' });
@@ -756,7 +755,6 @@ const Evaluation = () => {
 //     const fetchData = async () => {
 //       const response = await fetch('http://localhost/ssm/api/testpsc.php'); // Change this to your actual endpoint
 //       const result = await response.json();
-//       setData(result);
 //       groupData(result);
 //     };
 //     fetchData();
@@ -855,6 +853,11 @@ const Evaluation = () => {
 //       const middle = allAverages.reduce((a, b) => a + b, 0) / allAverages.length; 
 //     setClassAverages({ highest, middle: middle.toFixed(2), lowest }); 
 //     } 
+//   };
+
+//   const getOrdinal = (n) => { 
+//     const s = ["th", "st", "nd", "rd"], v = n % 100; 
+//     return n + (s[(v - 20) % 10] || s[v] || s[0]); 
 //   };
 //   const tdStyle = {
 //     height: '10px',
@@ -999,7 +1002,7 @@ const Evaluation = () => {
 //               </tbody>
 //             </table>
          
-//           <table id='' className='table table-striped table-bordered table-sm' >
+//           <table className='table table-striped table-bordered table-sm' >
 //               <thead>
 //                 <tr>
 //                   <th> Mois1</th>
@@ -1036,7 +1039,7 @@ const Evaluation = () => {
 //                   <td>{averages[matricule]?.appreciationMoy}  </td>
 //                 </tr>
 //                 <tr>
-//                   <td>Rang: {index + 1} </td>
+//                   <td>Rang: {getOrdinal(index + 1)} </td>
 //                 </tr>
 //               </tbody>
 //             </table>
@@ -1092,4 +1095,3 @@ const Evaluation = () => {
 // };
 
 // export default Evaluation;
-

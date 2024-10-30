@@ -1264,8 +1264,42 @@ const Evaluation = () => {
   const [classAverages, setClassAverages] = useState({ highest: 'N/A', middle: 'N/A', lowest: 'N/A' });
   const [studentCounts, setStudentCounts] = useState({});
   const [ranks, setRanks] = useState([]);
+  const[classe,setClData]=useState([])
+  const[classData,setClassData] = useState([])
+  const[niveauData,setNiveauData] = useState([])
+  const[enable,setEnable] = useState(true)
+  const[text,setText] = useState('Selectionnez d\'abord le niveau')
   let componentPdf = useRef();
+  const handleNiveau = async (e)=>{
+    const niveauId = e.target.value
+    if (niveauId !== "") {
+        setEnable(false)
+        setText('Selectionnez la classe')
+        setClassData(classe.filter(s => s.niveau === (e.target.value)))
+        
+    }else{
+        setText('Selectionnez d\'abord le niveau')
+        setClassData([])
+        setEnable(true)
+    }
+    // console.log(niveauId)
+} 
+useEffect( () => {
+  const getNiveau = async()=>{
+      const reqdata = await fetch("http://localhost/ssm/api/niveau.php")
+      const resdata = await reqdata.json()
+      // console.log(resdata)
+      setNiveauData(resdata)
+      }
+      getNiveau()
 
+      const getclasse= async()=>{
+        const reqdata = await fetch("http://localhost/ssm/api/classe.php")
+        const resdata = await reqdata.json()
+        setClData(resdata)
+      }
+        getclasse()
+  },[])
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch('http://localhost/ssm/api/testpsc.php'); // Change this to your actual endpoint
@@ -1369,6 +1403,11 @@ const Evaluation = () => {
     setClassAverages({ highest, middle: middle.toFixed(2), lowest }); 
     } 
   };
+
+  const getOrdinal = (n) => { 
+    const s = ["th", "st", "nd", "rd"], v = n % 100; 
+    return n + (s[(v - 20) % 10] || s[v] || s[0]); 
+  };
   const tdStyle = {
     height: '10px',
     verticalAlign: 'middle',
@@ -1386,19 +1425,53 @@ const Evaluation = () => {
   return (
     <main className='main-container'>
       <h3>Class Report Card</h3>
+      <div className="row mb-3">
+                <div className="form-group col-md-2">
+                <label className="mb-2">Niveau</label>
+                <select name="niveau" className="form-control" onChange={handleNiveau}>
+                <option value="">Selectionnez le Niveau</option>
+                    {
+                    niveauData.map((nData, index) =>(
+                    <option key={index}  value={nData.id}>{nData.libellee_niveau}</option>
+                        )
+                    )}
+                </select>
+              </div>
+              <div className="form-group col-md-2">
+              <label className="mb-2">Classe</label>
+              <select name="classe" disabled={enable} className="form-control">
+              <option value="">{text}</option>
+                {
+                classData.map((nData, index) =>(
+                <option key={index} value={nData.idClasse}>{nData.libellé_classe}</option>
+                    )
+                )}
+                </select>
+              </div>
+              <div className="form-group col-md-2">
+              <label className="mb-2">Trimestre</label>
+              <select name="classe" disabled={enable} className="form-control">
+                <option value="">Choisir le Timestre</option>
+                <option value="1">Timestre 1</option>
+                <option value="2">Timestre 2</option>
+                <option value="3">Timestre 3</option>
+                </select>
+              </div>
+              <div className=" col-md-1">
+              <label className="mb-2"></label>
+              <button className="btn btn-success">valider</button>
+              </div>
+              
+              </div>
       <div className="btn-group col-md-4" role="group">
         <ReactToPrint
           trigger={() => <button className="btn btn-success"> <PrinterFill /> Imprimer</button>}
           content={() => componentPdf}
         />
       </div>
-      <div ref={(el) => (componentPdf = el)} style={{ width: '100%', padding: '20px 40px', fontSize: '10px' }}>
+      <div ref={(el) => (componentPdf = el)} style={{ width: '80%', padding: '20px 40px', fontSize: '10px' }}>
         {ranks.map((matricule, index) => (
           <div key={matricule}>
-            <h4>Matricule: {matricule}</h4>
-            <p>Nom: {groupedData[matricule].eleve.nom}</p>
-            <p>Prénom: {groupedData[matricule].eleve.prenom || 'N/A'}</p>
-
             <div id="head">
               {/* entete du bulletin */}
               <div>
@@ -1431,10 +1504,10 @@ const Evaluation = () => {
                   <img src={`http://localhost/ssm/api/image/${groupedData[matricule].eleve.photo}`}    alt={groupedData[matricule].eleve.photo} style={{ width: "90px", paddingRight: "10px" }} />
                 </div>
                 <div>
-                  <p><strong>Nom et Prénoms:</strong> {groupedData[matricule].eleve.nom} {groupedData[matricule].eleve.prenom} </p>
-                  <p><strong>Matricule:</strong> {matricule} </p>
-                  <p><strong>Né(e) le :</strong> {groupedData[matricule].eleve.dateNaiss || 'N/A'} à {groupedData[matricule].eleve.lieuNaiss || 'N/A'} </p>
-                  <p><strong>Sexe:</strong> {groupedData[matricule].eleve.genre} </p>
+                  <p>Nom et Prénoms: <strong> {groupedData[matricule].eleve.nom}{groupedData[matricule].eleve.prenom} </strong></p>
+                  <p>Matricule: <strong>{matricule} </strong> </p>
+                  <p>Né(e) le : {groupedData[matricule].eleve.dateNaiss || 'N/A'} à {groupedData[matricule].eleve.lieuNaiss || 'N/A'} </p>
+                  <p>Sexe:{groupedData[matricule].eleve.genre} </p>
         </div>
       </div>
       <div>
@@ -1549,7 +1622,7 @@ const Evaluation = () => {
                   <td>{averages[matricule]?.appreciationMoy}  </td>
                 </tr>
                 <tr>
-                  <td>Rang: {index + 1} </td>
+                  <td>Rang: {getOrdinal(index + 1)} </td>
                 </tr>
               </tbody>
             </table>
