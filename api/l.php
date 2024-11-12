@@ -17,7 +17,8 @@ require('db.php');
                     //recupération du resulltat de la requete
                     $json_array['rowUserdata'] = array('id' =>$userrow['matricule_El'], 'matricule' =>$userrow['matricule_El'],'nom' =>$userrow['nom'],'genre' =>$userrow['genre'],'prenom' =>$userrow['prenom'],
                     'dateNaiss' =>$userrow['dateNaiss'],'classe' =>$userrow['classe'],'tuteur' =>$userrow['tuteur'],'adresse' =>$userrow['adresse'],'lieuNaiss' =>$userrow['lieuNaiss'],'photo' =>$userrow['photo'],
-                    'phone' =>$userrow['numero_tuteur'],'infoSup' =>$userrow['infos_supplementaire'],'niveau' =>$userrow['niveau'],'scolaire' =>$userrow['annee_scolaire'],'stat' =>$userrow['statut']
+                    'phone' =>$userrow['numero_tuteur'],'infoSup' =>$userrow['infos_supplementaire'],'niveau' =>$userrow['niveau'],'scolaire' =>$userrow['annee_scolaire'],'stat' =>$userrow['statut'],
+                    'ptuteur'=>$userrow['profession_tuteur'],'mere'=>$userrow['mere'],'phoneM'=>$userrow['numero_mere'],'pmere'=>$userrow['profession_mere'],'redoublant'=>$userrow['redoublant']
                 
                  );
                 }
@@ -34,7 +35,7 @@ require('db.php');
                         $json_array["userdata"][] = array('id' =>$row['matricule_El'], 'matricule' =>$row['matricule_El'],'nom' =>$row['nom'],'genre' =>$row['genre'],'prenom' =>$row['prenom'],
                         'dateNaiss' =>$row['dateNaiss'],'classe' =>$row['libellee_classe'],'cl' =>$row['classe'],'tuteur' =>$row['tuteur'],'adresse' =>$row['adresse'],'lieuNaiss' =>$row['lieuNaiss'],
                         'phone' =>$row['numero_tuteur'],'infoSup' =>$row['infos_supplementaire'],'photo'=>$row['photo'], 'niveau' =>$row['niveau'],'scolaire' =>$row['annee_scolaire'],'stat' =>$row['statut'],
-                        'ins'=> $row['frais_ins'],'sco'=> $row['frais_sco']
+                        'ins'=> $row['frais_ins'],'sco'=> $row['frais_sco'],'ptuteur'=>$row['profession_tuteur'],'mere'=>$row['mere'],'phoneM'=>$row['numero_mere'],'pmere'=>$row['profession_mere'],'redoublant'=> $row['redoublant']
                      );
                         
                     }

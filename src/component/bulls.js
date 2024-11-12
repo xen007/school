@@ -1,6 +1,5 @@
 // importation des modules
 import React, { useEffect, useState} from "react";
-import logo from './logo-tgsch.png'
 // fonction principale pour le bulletin de séquence
 export default function Bullt({data,num,ns}) {//donnée transmis en parametre
 // recupération du matricule et de l'index de position
@@ -54,7 +53,7 @@ if (noData.resultat === 'Verifiez les informations SVP' ) {
                 <p id="f1">Devise: Qualité - Morale - Travail</p>
               </div>
               <div id="Fr">
-                <img src={logo} style={{width:"120px"}} alt="Logo" />
+                <img src='' style={{width:"120px"}} alt="Logo" />
               </div>
               <div id="Fr">
                 <p>REPUBLIC OF CAMEROON</p>

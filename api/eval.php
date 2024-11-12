@@ -25,23 +25,13 @@ require('db.php');
 
             }else{
                 //recupères toutes les inforevalions de la table
-                $data = [];
+                $alleval = mysqli_query($db_connect,"SELECT * FROM evaluation  INNER JOIN matiere  on evaluation.matiere= matiere.id_matiere ");
 
-
-                $alleval = mysqli_query($db_connect,"SELECT * FROM evaluation  INNER JOIN matiere  on evaluation.matiere= matiere.id_matiere left join notes on evaluation.id_evaluation = notes.id_eval  ");
-                if (mysqli_num_rows($alleval) > 0) {
-                    while($row = mysqli_fetch_array($alleval)) {
-                        if (!isset($data[$row['id_matiere']])) {
-                            $data[$row['id_matiere']] = [];
-                        }
-                        $data[$row['id_matiere']][] = $row;
-                    }
-                }
                 if(mysqli_num_rows($alleval) > 0){
                     //vérifie si les inforevalions sont disponibles et les récupères
                     while($row = mysqli_fetch_array($alleval)){
                         $json_array["evaldata"][] = array('id' =>$row['id_evaluation'], 'ideval' =>$row['id_evaluation'],'nom' =>$row['nom_evaluation'],'matiere' =>$row['nom_matiere'],'bareme'=>$row['bareme'],'niveau' =>$row['niveau'],
-                        'idMat' =>$row['matiere'],'note1'=>$row['noteSeq']
+                        'idMat' =>$row['matiere'],
                 ); 
                         
                     }

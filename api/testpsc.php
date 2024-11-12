@@ -65,8 +65,6 @@ require('db.php');
 
 
 
-$classeId = '1'; // Identifiant de la classe
-
 // Requête pour sélectionner les élèves de la classe
 // $elevesQuery = mysqli_query($db_connect, "SELECT * FROM eleve INNER JOIN classe ON eleve.classe = classe.id_classe WHERE classe = '$classeId' ");
 
@@ -126,64 +124,98 @@ $classeId = '1'; // Identifiant de la classe
 
 // echo json_encode($data);
 
-$elevesQuery = mysqli_query($db_connect, "SELECT * FROM eleve INNER JOIN classe ON eleve.classe = classe.id_classe WHERE classe = '$classeId' ");
-if (!$elevesQuery) {
-    die("Échec de la requête : " . mysqli_error($db_connect));
-}
 
-$data = [];
-$studentCounts = [];
+    // $userpostdata = json_decode(file_get_contents("php://input"));
+    // //récupération des  données envoyés
+    // $classe = $userpostdata->classe;
+    // $trim = $userpostdata->trim;
 
-if (mysqli_num_rows($elevesQuery) > 0) {
-    while ($eleve = mysqli_fetch_array($elevesQuery)) {
-        $matricule = $eleve['matricule_El'];
-        $classe = $eleve['classe']; // Assuming 'classe' is the class identifier
-        
-        if (!isset($studentCounts[$classe])) {
-            $studentCounts[$classe] = 0;
-        }
-        $studentCounts[$classe]++;
 
-        // Requête pour sélectionner les notes de chaque élève
-        $notesQuery = mysqli_query($db_connect, "SELECT *, 
-            ROUND((IFNULL(m1, 0) + IFNULL(m2, 0) + IFNULL(m3, 0)) / (3 - (ISNULL(m1) + ISNULL(m2) + ISNULL(m3))),2) AS avr 
-            FROM notes 
-            INNER JOIN matiere ON notes.id_matiere = matiere.id_matiere 
-            INNER JOIN evaluation ON notes.id_eval = evaluation.id_evaluation 
-            WHERE matricule_El = '$matricule' 
-            ORDER BY nom_matiere");
-        if (!$notesQuery) {
-            die("Échec de la requête : " . mysqli_error($db_connect));
-        }
-        $notes = [];
-        while ($note = mysqli_fetch_array($notesQuery)) {
-            $notes[] = [
-                'id' => $note['id_evaluation'],
-                'ideval' => $note['id_evaluation'],
-                'nom' => $note['nom_evaluation'],
-                'matiere' => $note['nom_matiere'],
-                'bareme' => $note['bareme'],
-                'niveau' => $note['niveau'],
-                'description' => $note['description_mat'],
-                'idMat' => $note['id_matiere'],
-                'note1' => $note['m1'],
-                'note2' => $note['m2'],
-                'note3' => $note['m3'],
-                'bar' => $note['bareme'],
-                'moy' => $note['avr'],
-            ];
-        }
-
-        $data[$matricule] = [
-            'eleve' => array_merge($eleve, ['student_count' => $studentCounts[$classe]]), // Add student count to the eleve data
-            'notes' => $notes,
-        ];
+    
+    // Récupération des données envoyées
+   
+    header('Content-Type: application/json');
+    
+    // Example data structure in case of empty results
+    $emptyResponse = [
+        'data' => [],
+        'studentCounts' => []
+    ];
+    
+    $input = file_get_contents('php://input'); 
+    $data = json_decode($input, true); 
+    
+    if (!isset($data['classe']) || !isset($data['trim'])) {
+        echo json_encode(['error' => 'Invalid input']);
+        exit;
     }
-    $data['studentCounts'] = $studentCounts;
-} else {
-    echo json_encode([]);
-    exit;
-}
+    
+    $classe = $data['classe'];
+    $trim = $data['trim'];
 
-echo json_encode($data);
-?>
+    $elevesQuery = mysqli_query($db_connect, "SELECT * FROM eleve INNER JOIN classe ON eleve.classe = classe.id_classe WHERE classe = '$classe'");
+    if (!$elevesQuery) {
+        die("Échec de la requête : " . mysqli_error($db_connect));
+    }
+    
+    $data = [];
+    $studentCounts = [];
+    
+    if (mysqli_num_rows($elevesQuery) > 0) {
+        while ($eleve = mysqli_fetch_array($elevesQuery)) {
+            $matricule = $eleve['matricule_El'];
+            $classe = $eleve['classe'];
+    
+            if (!isset($studentCounts[$classe])) {
+                $studentCounts[$classe] = 0;
+            }
+            $studentCounts[$classe]++;
+    
+            $notesQuery = mysqli_query($db_connect, "SELECT *, 
+                ROUND((IFNULL(m1, 0) + IFNULL(m2, 0) + IFNULL(m3, 0)) / (3 - (ISNULL(m1) + ISNULL(m2) + ISNULL(m3))),2) AS avr 
+                FROM notes 
+                INNER JOIN matiere ON notes.id_matiere = matiere.id_matiere 
+                INNER JOIN evaluation ON notes.id_eval = evaluation.id_evaluation 
+                WHERE matricule_El = '$matricule' 
+                ORDER BY nom_matiere");
+            if (!$notesQuery) {
+                die("Échec de la requête : " . mysqli_error($db_connect));
+            }
+    
+            $notes = [];
+            if (mysqli_num_rows($notesQuery) > 6 ) {
+                while ($note = mysqli_fetch_array($notesQuery)) {
+                    $notes[] = [
+                        'id' => $note['id_evaluation'],
+                        'ideval' => $note['id_evaluation'],
+                        'nom' => $note['nom_evaluation'],
+                        'matiere' => $note['nom_matiere'],
+                        'bareme' => $note['bareme'],
+                        'niveau' => $note['niveau'],
+                        'description' => $note['description_mat'],
+                        'idMat' => $note['id_matiere'],
+                        'note1' => $note['m1'],
+                        'note2' => $note['m2'],
+                        'note3' => $note['m3'],
+                        'bar' => $note['bareme'],
+                        'moy' => $note['avr'],
+                    ];
+                }
+    
+                $data[$matricule] = [
+                    'eleve' => array_merge($eleve, ['student_count' => $studentCounts[$classe]]), 
+                    'notes' => $notes,
+                ];
+            }
+        }
+    
+        $data['studentCounts'] = $studentCounts;
+    } else {
+        echo json_encode($emptyResponse);
+        exit;
+    }
+    
+    echo json_encode($data);
+    $db_connect->close();
+    ?>
+    

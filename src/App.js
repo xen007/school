@@ -54,6 +54,9 @@ import ScoView from './undercompo/scoView';
 import Evaluation from './component/evaluations';
 import EvalInsert from './undercompo/evalInsert';
 import EvalEdit from './undercompo/evalEdit';
+import StudentMark from './tecomp/studentmarks';
+import NoteEdit from './undercompo/noteEdit';
+import SchoolUp from './undercompo/SchoolUp';
 
 
 function App() {
@@ -135,6 +138,9 @@ function App() {
               <Route path='/evaluations' element={<Evaluation />} />
               <Route path='/evalInsert' element={<EvalInsert />} />
               <Route path='/evalEdit/:ideval' element={<EvalEdit />} />
+              <Route path='/studentmarks' element={<StudentMark />} />
+              <Route path='/noteEdit' element={<NoteEdit />} /> 
+              <Route path='/SchoolUp/:id' element={<SchoolUp />} /> 
             </>
           ): (
             <>

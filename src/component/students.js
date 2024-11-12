@@ -13,6 +13,7 @@ export default function StudentList(){ //declaration de la fonction principale
     const[studentData, setStudentData] = useState([])
     const[ins, setInsData] = useState([])
     const[record,setRecord] = useState([])
+    const[ecData,setecData]=useState([])
     useEffect( ()=> {
         getStudentData()
     },[])
@@ -24,6 +25,12 @@ export default function StudentList(){ //declaration de la fonction principale
             setRecord(result) 
             setStudentData(result)
             } 
+    const getecole= async()=>{
+        const reqdata = await fetch("http://localhost/ssm/api/schoolUp.php/"+ 1)
+        const resdata = await reqdata.json()
+        setecData(resdata)
+        }
+    getecole()
         
     }
 
@@ -260,7 +267,31 @@ export default function StudentList(){ //declaration de la fonction principale
                 
                 </div>
                 <div style={{ display: "none" }}>
-                <table ref={(el) => (componentPdf = el)} style={{width:'100%',padding:'0px 12px',fontSize:'10px'}} className='table table-striped table-bordered '>
+                <div ref={(el) => (componentPdf = el)} style={{width:'100%',padding:'0px 12px',fontSize:'10px'}} >
+                <div id="head">
+                {/* entete du bulletin */}
+                <div>
+                    <p className="fw-bold">REPUBLIQUE DU CAMEROUN</p>
+                    <p>Paix Travail Patrie</p>
+                    <p className="fw-bold">MINISTERE DE L'EDUCATION DE BASE</p>
+                    <p>Délégation Régionale de l'Est</p>
+                    <p>Délégation Départementale du Lom et Djerem</p>
+                </div>
+                <div>
+                <img src={`http://localhost/ssm/api/logo/${ecData.logo}`} style={{ width: "80px" }} alt="Logo" />
+                </div>
+                <div>
+                    <p className="fw-bold">REPUBLIC OF CAMEROON</p>
+                    <p>Peace Work Fatherland</p>
+                    <p className="fw-bold">MINISTRY OF BASIC EDUCATION</p>
+                    <p>East Regional Delegation</p>
+                    <p>Lom and Djerem Divisional Delegation</p>
+                </div>
+                </div>
+                <div id='middle'>
+                <p id='tiEcol'>NEW GENERATION "SCHOOL OF PERFORMANCE" </p>
+                </div>
+                <table className='table table-striped table-bordered '>
                         <thead>
                             <tr>
                                 <th>Sr No</th>
@@ -293,6 +324,7 @@ export default function StudentList(){ //declaration de la fonction principale
 
 
                     </table>
+                </div>
                 </div>
 
             </div>

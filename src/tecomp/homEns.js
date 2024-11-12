@@ -21,7 +21,7 @@ export default function HomeEns() {
         
         <div className='col-lg-6 col-md-6 col-sm-6'>
           <img src={notes3} alt="notes" className='emploi' />
-          <Link to={`/notes/${matricule}`} className=' btn btn-primary'>Saisie des notes  <FaPen/></Link> {/*/note/$matricule nous donne le lien avec le matricule  */}
+          <Link to={`/studentmarks/`} className=' btn btn-primary'>Saisie des notes  <FaPen/></Link> {/*/note/$matricule nous donne le lien avec le matricule  */}
         </div>
         <div className='col-lg-6 col-md-6 col-sm-6'>
           <img src={timetable} alt="time-table" className='emploi' />

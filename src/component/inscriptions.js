@@ -83,6 +83,7 @@ export default function Inscriptions(){//creation de la fonction principaae
  
      const[record,setRecord] = useState([])
      const handleTri = (e) =>{
+        
          setRecord(insData.filter(s => s.classe === (e.target.value)))
      }
      const Tri = (e) =>{

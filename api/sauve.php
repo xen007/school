@@ -5,7 +5,7 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: *");
 header("Access-Control-Allow-Methods: *");
 
-$databases = ['pschool'];
+$databases = ['ssm-pschool'];
 $user = "root";
 $pass = "";
 $host = "localhost";

@@ -13,8 +13,13 @@ require('db.php');
             $genre = checkInput($_POST['genre']);
             $tuteur = checkInput($_POST['tuteur']);
             $phone = checkInput($_POST['phone']);
+            $ptuteur = checkInput($_POST['ptuteur']);
+            $mere = checkInput($_POST['mere']);
+            $phoneM = checkInput($_POST['phoneM']);
+            $pmere = checkInput($_POST['pmere']);
             $niveau = checkInput($_POST['niveau']);
             $classe = checkInput($_POST['classe']);
+            $redoublant = checkInput($_POST['redoublant']);
             $scolaire = checkInput($_POST['scolaire']);
             $message = checkInput($_POST['infoSup']);
 
@@ -31,8 +36,8 @@ require('db.php');
                 $dest=$_SERVER['DOCUMENT_ROOT'].'/ssm/api/image'."/".$photo;
             }
             
-            $result = mysqli_query($db_connect, "INSERT INTO eleve (matricule_EL, nom, prenom, dateNaiss, lieuNaiss, adresse, genre, tuteur, numero_tuteur, niveau, classe, annee_scolaire, photo, infos_supplementaire, date_enregistrement) 
-            VALUES ('$matricule','$nom' ,'$prénom', '$datenaiss', '$lieunaiss', '$adresse', '$genre', '$tuteur', '$phone', '$niveau' , '$classe', '$scolaire','$photo','$message', NOW())" );
+            $result = mysqli_query($db_connect, "INSERT INTO eleve (matricule_EL, nom, prenom, dateNaiss, lieuNaiss, adresse, genre, tuteur, numero_tuteur,profession_tuteur,mere,numero_mere,profession_mere, niveau, classe,redoublant, annee_scolaire, photo, infos_supplementaire, date_enregistrement) 
+            VALUES ('$matricule','$nom' ,'$prénom', '$datenaiss', '$lieunaiss', '$adresse', '$genre', '$tuteur', '$phone','$ptuteur','$mere','$phoneM','$pmere', '$niveau' , '$classe','$redoublant', '$scolaire','$photo','$message', NOW())" );
                 if($result){
                     // stocker les informations relatives a la photo
                     move_uploaded_file($photo_temp,$dest);

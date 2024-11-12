@@ -14,11 +14,16 @@ export default function StudInsert(){
     const[genre,setGenre] = useState('')    
     const[tuteur,setTuteur] = useState('')    
     const[phone,setPhone] = useState('')    
+    const[ptuteur,setPtuteur] = useState('')    
+    const[mere,setMere] = useState('')    
+    const[phoneM,setPhoneM] = useState('')    
+    const[pmere,setPmere] = useState('')    
     const[infoSup,setInfosup] = useState('')    
     const[photo,setPhoto] = useState('')    
     const[matricule,setMatricule] = useState('')    
     const[niveau,setNiveau] = useState('')    
     const[classe,setClasse] = useState('')    
+    const[redoublant,setRedoublant] = useState('')    
     const scolaire  = "2024-2025"
     
     const[message,setMessage] = useState('')
@@ -34,11 +39,16 @@ export default function StudInsert(){
         formData.append('genre',genre)
         formData.append('tuteur',tuteur)
         formData.append('phone', phone)
+        formData.append('ptuteur', ptuteur)
+        formData.append('mere', mere)
+        formData.append('phoneM', phoneM)
+        formData.append('pmere', pmere)
         formData.append('infoSup',infoSup)
         formData.append('photo',photo)
         formData.append('matricule', matricule)
         formData.append('niveau',niveau)
         formData.append('classe',classe)
+        formData.append('redoublant',redoublant)
         formData.append('scolaire', scolaire)
     
         
@@ -149,13 +159,29 @@ export default function StudInsert(){
                                         <option value="F">F</option>
                                     </select>
                                 </div>
-                                <div className="input-field">
+                                <div className="input-field"> 
                                     <label>Nom Tuteur</label>
                                     <input type="text" name='tuteur' id='tuteur'  onChange={ (e)=> setTuteur(e.target.value)} placeholder="nom du tuteur" />
                                 </div>
                                 <div className="input-field">
                                     <label>Numéro Tuteur</label>
-                                    <input type="tel" name='phone' id='phone' onChange={ (e)=> setPhone(e.target.value)} placeholder="numéro tuteur" />
+                                    <input type="number" name='phone' id='phone' onChange={ (e)=> setPhone(e.target.value)} placeholder="numéro tuteur" />
+                                </div>
+                                <div className="input-field"> 
+                                    <label>profession Tuteur</label>
+                                    <input type="text" name='ptuteur' id='ptuteur'  onChange={ (e)=> setPtuteur(e.target.value)} placeholder="nom du tuteur" />
+                                </div>
+                                <div className="input-field"> 
+                                    <label>Nom de la Mere</label>
+                                    <input type="text" name='mere' id='mere'  onChange={ (e)=> setMere(e.target.value)} placeholder="nom du tuteur" />
+                                </div>
+                                <div className="input-field">
+                                    <label>Numéro mère</label>
+                                    <input type="number" name='phoneM' id='phoneM' onChange={ (e)=> setPhoneM(e.target.value)} placeholder="numéro tuteur" />
+                                </div>
+                                <div className="input-field"> 
+                                    <label>profession mere</label>
+                                    <input type="text" name='pmere' id='pmere'  onChange={ (e)=> setPmere(e.target.value)} placeholder="nom du tuteur" />
                                 </div>
                                 <div className="input-field">
                                     <label>Autres Informations</label>
@@ -204,6 +230,13 @@ export default function StudInsert(){
                                         )}
                                        
                                     </select>  
+                                </div>
+                                <div className="input-field">
+                                <label>Redoublant</label>
+                                <select name='redoublant' id='redoublant' onChange={ (e)=> setRedoublant(e.target.value)}>
+                                    <option value="non" >Non</option>    
+                                    <option value="oui" >Oui</option>    
+                                </select>
                                 </div>
                                 <div className="input-field">
                                 <label>Année Scolaire</label>

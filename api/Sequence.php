@@ -1,20 +1,14 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors',1);
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Headers: *');
-header('Access-Control-Allow-Methods: *');
+include 'db.php';
+switch($method){
+    case"GET"://methode de récupération de données  
+        $alluser = mysqli_query($db_connect,"SELECT * FROM sequence ");
+        if(mysqli_num_rows($alluser) > 0){
+            while($row = mysqli_fetch_array($alluser)){
+                $json_array["userdata"][] = array('id' =>$row['id'], 'libellee_seq' =>$row['libellee_sequence'],'trim' =>$row['trimestre'],
+                );  
+            }     
+        } 
+        echo json_encode($json_array["userdata"]);
 
-
-include 'Dbase.php';
-$db = new Dbase;
-$conn = $db->connect();
-$json_array = array();
-$sql = "SELECT * FROM sequence";
-$stmt = $conn->prepare($sql);
-$stmt-> execute();
-$users= $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-echo json_encode($users);
-
-?>
+}

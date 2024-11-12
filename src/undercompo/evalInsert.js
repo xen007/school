@@ -113,15 +113,10 @@ export default function EvalInsert(){
                     <label className="mb-2">nom_Evaluation</label>
                     <select name='nom' id='nom'  onChange={handleInput} className="form-control">
                         <option value="">choisissez une valuation</option>
-                        <option value="Orale"> Orale</option>
-                        <option value="Pratique"> Pratique</option>
-                        <option value="Ecrit"> Ecrit</option>
-                        <option value="Savoir Etre"> Savoir Etre</option>
                         <option value="Oral"> Oral</option>
-                        <option value="Oral"> Practical</option>
-                        <option value="Writing"> Writing</option>
-                        <option value="Attitude"> Attitude</option>
-                        
+                        <option value="Ecrit/ Writing"> Ecrit/Writing</option>
+                        <option value="Pratique/ Practical"> Pratique/ Practical</option>
+                        <option value="Savoir Etre/ Attitude"> Savoir Etre/Attitude</option>
                     </select>      
                     </div>
                     <div className="form-group col-md-4">

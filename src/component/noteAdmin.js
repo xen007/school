@@ -1,201 +1,222 @@
-import React, { useEffect, useState, useContext } from 'react';
-import axios from 'axios';
-import { useParams, useNavigate } from 'react-router-dom';
-import AuthContext from '../context/AuthProvider';
-
-export default function StudentMark() {
-  const { auth } = useContext(AuthContext);
-  const [classe, setClasse] = useState('');
-  const [seq, setSeq] = useState('');
-  const [matiere, setMatiere] = useState('');
-  const [atti, setEva_Atti] = useState({});
-  const [wri, setEva_Wri] = useState({});
-  const [oral, setEva_Or] = useState({});
-  const [prac, setEva_Prac] = useState({});
-  const [savoir, setEva_Savoir] = useState({});
-  const [ecrit, setEva_Ecrit] = useState({});
-  const [clData, setClData] = useState([]);
-  const [clSeq, setClSeq] = useState([]);
-  const [matiereData, setMatiereData] = useState([]);
-  const [StudentInfo, setStudentInfo] = useState([]);
-  const [disable, setDisable] = useState(true);
-  const { matricule } = useParams();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    handlesal(); // Fetch classes and sequences on mount
-  }, []);
-
-  const handlesal = async () => {
-    const response = await axios.get(`http://localhost/ssm/api/handleClassTeacher.php/${matricule}`);
-    setClData(response.data);
-    handleSeq();
-  };
-
-  const handleSeq = async () => {
-    const response = await axios.get('http://localhost/ssm/api/sequence.php/001');
-    setClSeq(response.data);
-  };
-
-  const handleClasse = async (e) => {
-    const selectedClass = e.target.value;
-    setClasse(selectedClass);
-    setDisable(false);
+// importation des modules
+import React, { useEffect, useState } from 'react';
+import { Link} from 'react-router-dom';
+import { Plus } from 'react-bootstrap-icons';
+import NoteEdit from '../undercompo/noteEdit';
+// fonction principale
+export default function NoteAdmin() {
+    // déclaration des constantes
+    const [seq, setSeq] = useState([]);
+  
+    const [niveau, setNiveau] = useState([]);
+    const [evaluation, setEvaluation] = useState([]);
+    const [evalData, setEvalData] = useState([]);
+    const [student, setStudent] = useState([]);
+  
+    const[subject,setSubject]=useState([])
+    const[subData,setSubData]=useState([])
+      const[classData,setClassData] = useState([])
+      const[classe,setClasse] = useState([])
+      const[enable,setEnable] = useState(true)
+      const[text,setText] = useState('Selectionnez d\'abord le niveau')
+  
+  
+      const[formvalue,setFormvalue] = useState({
+        seq:'',
+        evaluation:'',
+        classe:'',
+        matiere:'',
+        })
+        const handleInput =(e) =>{
+          setFormvalue({...formvalue,[e.target.name] : e.target.value})
+        }
+      useEffect(() => {
+        getNiveau(); // Fetch classes and sequences on mount
+        getSubject(); // Fetch classes and sequences on mount
+        getclasse(); // Fetch classes and sequences on mount
+        getEval(); // Fetch classes and sequences on mount
+        getSeq(); // Fetch classes and sequences on mount
+       
+      }, []);
     
-    const response = await axios.get(`http://localhost/ssm/api/handleMatiereTeacher.php/${matricule}/${selectedClass}`);
-    setMatiereData(response.data);
-  };
-
-  const handleData = async (e) => {
-    const subject = e.target.value;
-    setMatiere(subject);
-    
-    const response = await axios.get(`http://localhost/ssm/api/handleStudents.php/${classe}`);
-    setStudentInfo(response.data);
-  };
-
-  const handleChange = (setter, matricule, value) => {
-    setter(prevMarks => ({
-      ...prevMarks,
-      [matricule]: value
-    }));
-  };
-
-  const handleSubmit = async () => {
-    if (!seq || !matiere ){
-      alert('Please fill in all the fields!');
-      return;
+      const getNiveau=async()=>{
+        const req = await  fetch('http://localhost/ssm/api/niveau.php/')
+        const res = await req.json()
+        setNiveau(res)
     }
+    const getSubject= async()=>{
+      const reqdata = await fetch("http://localhost/ssm/api/mat.php")
+      const resdata = await reqdata.json()
+      setSubject(resdata)
+    }
+    const getclasse= async()=>{
+      const reqdata = await fetch("http://localhost/ssm/api/classe.php")
+      const resdata = await reqdata.json()
+      setClasse(resdata)
+    }
+    const getEval= async()=>{
+      const reqdata = await fetch("http://localhost/ssm/api/eval.php")
+      const resdata = await reqdata.json()
+      setEvaluation(resdata)
+    }
+    const getSeq= async()=>{
+      const reqdata = await fetch("http://localhost/ssm/api/sequence.php")
+      const resdata = await reqdata.json()
+      setSeq(resdata)
+    }
+    const handleNiveau = async (e)=>{
+      const niveauId = e.target.value
+      if (niveauId !== "") {
+          setSubData(subject.filter(s => s.niv === (e.target.value)))
+          setClassData(classe.filter(s => s.niveau === (e.target.value)))
+          setEnable(false)
+          setText('Selectionnez')
+          // setEvalData(evaluation.filter(s => s.matiere === (e.target.value)))
+  
+      }else{
+          setText('Selectionnez d\'abord le niveau')
+          setSubData([])
+          setEnable(true)
+      }
+      // console.log(niveauId)
+  } 
+  const handleEval = (e) =>{
+    setFormvalue({...formvalue,[e.target.name] : e.target.value})
+    setEvalData(evaluation.filter(s => s.idMat === (e.target.value)))
+  }
+  // const handleStud = (e) =>{
+  //   setFormvalue({...formvalue,[e.target.name] : e.target.value})
+  //   setStudentData(student.filter(s => s.cl === (e.target.value)))
+  //   console.log(studentData)
+  // }
 
-    // Gather form data
-    const formData = {
-      seq,
-      matiere,
-      markOralToStore: Object.entries(oral),
-      markAttiToStore: Object.entries(atti),
-      markWriteToStore: Object.entries(wri),
-      markPracToStore: Object.entries(prac),
-      markSavoirToStore: Object.entries(savoir),
-      markEcritToStore: Object.entries(ecrit),
-      markNoteToStore: StudentInfo.map(student => [
-        student.matricule_El,  // First element: matricule
-        (                      // Second element: totalNote
-          (parseInt(oral[student.matricule_El]) || 0) +
-          (parseInt(atti[student.matricule_El]) || 0) +
-          (parseInt(wri[student.matricule_El]) || 0) +
-          (parseInt(prac[student.matricule_El]) || 0) +
-          (parseInt(savoir[student.matricule_El]) || 0) +
-          (parseInt(ecrit[student.matricule_El]) || 0)
-        )
-      ])
-    };
-    
-    console.log(formData);
-
-    //Submit the form data to the API
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
-      const response = await axios.post('http://localhost/ssm/api/RegisterMarks.php', formData);
-      alert(response.data.status);
-      console.log(response.data.status)
+      const res = await fetch('http://localhost/ssm/api/ViewNote.php', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json', 
+        }, body: JSON.stringify(formvalue), 
+      });
+      const result = await res.json(); 
+      if (result.error) {
+        console.error(result.error); 
+        return; 
+      }
+      // setResponse(result); // Update the response state with the result
+      if(result.resultat !== 'Verifiez les informations SVP'){
+        const resultat = result.sort((a,b) => a.nom.localeCompare(b.nom))
+        setStudent(resultat)
+        }  // Call your custom function with the result
     } catch (error) {
-      console.error('Error submitting marks:', error);
-      alert('Error submitting marks, please try again.');
+      console.error('Error:', error);
     }
   };
   return (
-    <>
-      <main className='main-container'>
-        <div className="enseignant row">
-          <h3>Welcome to Notes Management</h3>
-          <div className="col-sm-12">
-            <div className="row mb-3">
-              <div className="form-group col-md-4">
-                <label>Room</label>
-                <select className="form-select" onChange={handleClasse} disabled={!clData.length}>
-                  <option defaultValue value=''>Select the Classroom</option>
-                  {clData.map((classe, key) => (
-                    <option key={key} value={classe.id_classe}>{classe.libellee_classe}</option>
+<>
+<main className='main-container'>
+    <div className="enseignant row"><h3>Bienvenu sur la gestion des Notes</h3>
+    <div className="row ">
+                <div className="form-group col-md-2">
+                <label className="mb-2">Niveau</label>
+                <select id='niveau' name="niveau" className="form-control" onChange={handleNiveau}>
+                <option value="">Selectionnez le Niveau</option>
+                    {
+                    niveau.map((nData, index) =>(
+                    <option key={index}  value={nData.id}>{nData.libellee_niveau}</option>
+                        )
+                    )}
+                </select>
+              </div>
+
+              <div className="form-group col-md-2">
+                <label className="mb-2">Sequence</label>
+                <select id='seq' name='seq' className="form-select"  onChange={handleInput} >
+                  <option>Choix Sequence</option>
+                  {seq.map((seq, key) => (
+                    <option key={key} value={seq.id}>{seq.libellee_seq}</option>
                   ))}
                 </select>
               </div>
-              <div className="form-group col-md-4">
-                <label>Sequence</label>
-                <select className="form-select" onChange={(e) => setSeq(e.target.value)} disabled={!clSeq.length}>
-                  <option defaultValue value=''>Select Sequence</option>
-                  {clSeq.map((seq, key) => (
-                    <option key={key} value={seq.id}>{seq.libellee_sequence}</option>
-                  ))}
+              <div className="form-group col-md-2">
+              <label className="mb-2">matiere</label>
+              <select id='matiere' name="matiere" disabled={enable} onChange={handleEval} className="form-control">
+              <option value="">{text}</option>
+                {
+                subData.map((nData, index) =>(
+                <option key={index} value={nData.idMat} >{nData.nom}</option>
+                    )
+                )}
                 </select>
               </div>
-              <div className="form-group col-md-4">
-                <label>Subject</label>
-                <select className="form-select" onChange={handleData} disabled={disable}>
-                  <option defaultValue value=''>Select the Subject</option>
-                  {matiereData.map((matiere, key) => (
-                    <option key={key} value={matiere.id_matiere}>{matiere.nom_matiere}</option>
-                  ))}
+              <div className="form-group col-md-2">
+                <label className="mb-2">Evaluation</label>
+                <select id='evaluation' name='evaluation' className="form-select" onChange={handleInput} disabled={enable}>
+                  <option >Select the Evaluation</option>
+                  {
+                evalData.map((nData, index) =>(
+                <option key={index} value={nData.ideval} >{nData.nom}</option>
+                    )
+                )}
                 </select>
+              </div>
+              <div className="form-group col-md-2">
+              <label className="mb-2">Classe</label>
+              <select id='classe' name="classe" disabled={enable} onChange={handleInput} className="form-control">
+              <option value="">{text}</option>
+                {
+                classData.map((nData, index) =>(
+                <option key={index} value={nData.idClasse}>{nData.libellé_classe}</option>
+                    )
+                )}
+                </select>
+              </div> 
+              <div className=" col-md-1">
+              <label className="mb-2"></label>
+              <button className="btn btn-success" onClick={handleSubmit}>valider</button>
               </div>
             </div>
           </div>
-        </div>
-
-        <div className="enseignant row main-container">
-          <div className="col-md-9 contain">
-            <table className="table table-striped table-bordered w-100">
-              <thead>
+    <div className="container">
+    <h3><strong>Ajouter une note</strong> <Link to={`/studentmarks`} className="btn btn-success"><Plus />Ajouter</Link></h3>
+     <table className="table table-striped table-bordered  w-auto">
+                <thead>
+                
                 <tr>
-                  <th>Matricule</th>
-                  <th>Name</th>
-                  <th>First name</th>
-                  <th>EV.Atti</th>
-                  <th>EV.Or</th>
-                  <th>EV.Wri</th>
-                  <th>EV.Prac</th>
-                  <th>EV.Savoir</th>
-                  <th>EV.Ecrit</th>
-                  <th>Note Moyenne</th>
+                    <th>Matricule</th>
+                    <th>Nom</th>
+                    <th>Prenom</th>
+                    <th>Note</th>
+                    <th>Action</th>
                 </tr>
-              </thead>
-              <tbody>
-                {StudentInfo.map((student, key) => (
-                  <tr key={key}>
-                    <td>{student.matricule_El}</td>
-                    <td>{student.nom}</td>
-                    <td>{student.prenom}</td>
-                    <td><input type="number" value={atti[student.matricule_El] || ''} onChange={(e) => handleChange(setEva_Atti, student.matricule_El, e.target.value)} /></td>
-                    <td><input type="number" value={oral[student.matricule_El] || ''} onChange={(e) => handleChange(setEva_Or, student.matricule_El, e.target.value)} /></td>
-                    <td><input type="number" value={wri[student.matricule_El] || ''} onChange={(e) => handleChange(setEva_Wri, student.matricule_El, e.target.value)} /></td>
-                    <td><input type="number" value={prac[student.matricule_El] || ''} onChange={(e) => handleChange(setEva_Prac, student.matricule_El, e.target.value)} /></td>
-                    <td><input type="number" value={savoir[student.matricule_El] || ''} onChange={(e) => handleChange(setEva_Savoir, student.matricule_El, e.target.value)} /></td>
-                    <td><input type="number" value={ecrit[student.matricule_El] || ''} onChange={(e) => handleChange(setEva_Ecrit, student.matricule_El, e.target.value)} /></td>
+                
+            </thead>
+            <tbody>{student.map((notes, key)=>
+                <tr className='text-dark' key={key}>
+                    <td>{notes.matricule}</td>
+                    <td>{notes.nom}</td>
+                    <td>{notes.prenom}</td>
+                    <td>{notes.note1}</td>
+                    <td><div className="btn-group " role="toolbar" aria-label="Toolbar with button groups">
+                      <div role="group" aria-label="Second group">
+                          <NoteEdit data={notes} ud={formvalue} />
+                      </div>
+                    </div></td> 
+              </tr>)}
+          </tbody> 
+      </table>
+  </div>
+  <div>
+            {/* <Popup openPopup = {openPopup}
+                setOpenPopup = {setOpenPopup}
+                title ='Modify the note'
+                >
+            <ModificationNote />
+        </Popup> */}
+        </div> 
 
-                                        
-                    <td>
-                    <input
-                        type="number"
-                        name="note"
-                        value={
-                            (parseInt(atti[student.matricule_El]) || 0) +
-                            (parseInt(oral[student.matricule_El]) || 0) +
-                            (parseInt(wri[student.matricule_El]) || 0) +
-                            (parseInt(prac[student.matricule_El]) || 0) +
-                            (parseInt(savoir[student.matricule_El]) || 0) +
-                            (parseInt(ecrit[student.matricule_El]) || 0)
-                        }
-                        readOnly
-                        />
-                    </td>                    
-                </tr>
-                              )  )}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <button onClick={handleSubmit} className="btn btn-primary">Submit</button>
-            </main>
-        </>
-    );
+    </main>
+    </>
+  )
 }
-
