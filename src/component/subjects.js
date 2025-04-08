@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import SubAffect from "../undercompo/subAffect";
 import { PencilSquare, Plus } from "react-bootstrap-icons";
+import config from './config';
 
 export default function Subject(){ //fonction principale
     // declaration de la consrante pour stocker les matieres
@@ -13,7 +14,7 @@ export default function Subject(){ //fonction principale
         getSubject()
     },[])
     const getSubject= async()=>{
-        const reqdata = await fetch("http://localhost/ssm/api/mat.php")
+        const reqdata = await fetch(`${config.apiBaseUrl}/mat.php`)
         const resdata = await reqdata.json()
             if(resdata.resultat !== 'Verifiez les informations SVP'){
             const result = resdata.sort((a,b) => a.nom.localeCompare(b.nom))
@@ -29,7 +30,7 @@ export default function Subject(){ //fonction principale
         getclasse()
     },[])
     const getclasse= async()=>{
-        const reqdata = await fetch("http://localhost/ssm/api/classe.php")
+        const reqdata = await fetch(`${config.apiBaseUrl}/classe.php`)
         const resdata = await reqdata.json()
         setClData(resdata)
     }
@@ -41,7 +42,7 @@ export default function Subject(){ //fonction principale
   
     useEffect( () => {
     const getNiveau = async()=>{
-        const reqdata = await fetch("http://localhost/ssm/api/niveau.php")
+        const reqdata = await fetch(`${config.apiBaseUrl}/niveau.php`)
         const resdata = await reqdata.json()
         // console.log(resdata)
         setNiveauData(resdata)
@@ -61,7 +62,7 @@ export default function Subject(){ //fonction principale
     }
     // fonction de suppression
     // const handleDelete = async(idMat) =>{
-    // const req= await axios.delete("http://localhost/ssm/api/mat.php/"+idMat)
+    // const req= await axios.delete(`${config.apiBaseUrl}/mat.php/`+idMat)
     // setMessage(req.data.success)
     //     if(req.data.success){
     //         setMessage(req.data.success)

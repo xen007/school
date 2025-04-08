@@ -1,195 +1,142 @@
-import React, {useState, useRef, useEffect} from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import '../style/registration.css';
-import { useNavigate, useParams} from 'react-router-dom';
-import axios from 'axios';
-import cors from 'cors';
-import ProtectedRoute from './ProtectedRoute';
+import React, { useState, useEffect } from "react";
+import './Registration.css'; // Import the CSS file
+import { register } from '../utils/auth'; // Import the register function
 
+function Registration({ onClose }) {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [role, setRole] = useState('user'); // Default role
+  const [matricule, setMatricule] = useState(''); // New state for matricule
+  const [passwordMatch, setPasswordMatch] = useState(true);
+  const [passwordStrength, setPasswordStrength] = useState('');
+  const [isFormValid, setIsFormValid] = useState(false);
 
+  useEffect(() => {
+    const isFormValid = username && matricule && passwordStrength === 'Strong' && passwordMatch;
+    setIsFormValid(isFormValid);
+  }, [username, matricule, passwordStrength, passwordMatch]);
 
+  const handlePasswordChange = (e) => {
+    const value = e.target.value;
+    setPassword(value);
+    validatePassword(value);
+  };
 
-export default function Registration() {
+  const handleConfirmPasswordChange = (e) => {
+    const value = e.target.value;
+    setConfirmPassword(value);
+    setPasswordMatch(password === value);
+  };
 
-    const [email, setEmail] = useState('');
-    const [matricule, setMatricule] = useState('');
-    const [pass, setPass] = useState('');
-    const [Msg, setMsg] = useState('');
-    const [err, setErr] = useState('');
-    const [toggle, setToggle] = useState(false);
-    const [Msg1, setMsg1] = useState('');
+  const validatePassword = (value) => {
+    const strength = /^(?=.*\d).{4,}$/.test(value) ? 'Strong' : 'Weak';
+    setPasswordStrength(strength);
+    setPasswordMatch(value === confirmPassword);
+  };
 
-    const navigate = useNavigate();
-    
-    useEffect(() => {
-        const handlePopstate = () => {
-          // Check if the user is on the login page
-          if (window.location.pathname === '/Registration' || window.location.pathname === '/' ) {
-            // Navigate forward to another route (e.g., home page)
-            navigate('/Registration');
-          }
-        };
-    
-        // Add event listener for popstate (hardware back button press)
-        window.addEventListener('popstate', handlePopstate);
-    
-        // Cleanup: Remove event listener when component unmounts
-        return () => {
-          window.removeEventListener('popstate', handlePopstate);
-        };
-      }, [navigate]);
-
-    const handleInputChange = (e, type) => {
-        
-        switch(type){
-            case "matricule":
-             setErr("");
-             setMatricule(e.target.value);
-             if(e.target.value === ""){
-                setErr("Veuillez entrer un matricule !")
-             }
-             break;
-             case "pass":
-             setErr("");
-             setPass(e.target.value);
-             if(e.target.value === ""){
-                //setErr("Vous devez saisir un mot de passe !");
-                console.log('bonjour')
-             }else{
-                setMsg1('')
-             }
-             break;
-            default: 
-        }    
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (isFormValid) {
+      try {
+        const response = await register(username, matricule, password, confirmPassword, role);
+        if (response.status === 'success') {
+          alert('Compte créé avec succès!');
+          onClose();
+        } else {
+          alert(response.message || 'Échec de la création du compte');
         }
-    
-
-const handleSubmit = () => {
-
-if(toggle === true){
-    var headers = {"Accept":"application/json",
-    "Content-Type": "application/json"};
-    var donnee = {
-    matricule: matricule,
-    pass: pass,
-    headers: headers}
-
-
-    axios.post('http://localhost/files/login.php', donnee) 
-    .then(response=>{
-    //setMsg(response.data.status);
-    console.log(response.data.status);
-    if ( response.data.status === 'successfully recorder, redirecting to a new page') {
-    navigate(`/Dashbord/${matricule}`);
+      } catch (error) {
+        alert('Error: ' + error.message);
+      }
+    } else {
+      alert('Remplissez les champs correctement.');
     }
-    else{
-        setMsg1('Le matricule ou mot de passe est incorrect')
-        console.log("connexion echoué") ; 
-        console.log(Msg);
-    }
-        
-        })
-        .catch((err)=> console.log(err));
-
-}
-    
-  
-else{
-    var headers = {"Accept":"application/json",
-    "Content-Type": "application/json"};
-    var donnee = {
-    matricule: matricule,
-    pass: pass,
-    headers: headers}
-
-
-    axios.post('http://localhost/files/login.php', donnee) 
-    .then(response=>{
-    console.log(response.data.status);
-    if ( response.data.status === 'successfully recorder, redirecting to a new page') {
-    ProtectedRoute(false);
-    navigate(`/Ensei/${matricule}`);
-    
-    }
-    else if(pass === ''){
-        ProtectedRoute(false)
-        setErr("Vous devez saisir un mot de passe !");
-         
-    }
-    else{
-        setMsg1('Le matricule ou mot de passe est incorrect')
-        console.log("connexion echoué") ;
-        ProtectedRoute(false) 
-        console.log(Msg);
-    }
-    
-        
-        })
-        .catch((err)=> console.log(err));
-       
-        
-}   
-
-    
-}
+  };
 
   return (
-    <div>
-        <section className="vh-200 image" style={{backgroundImage: 'url("https://images.unsplash.com/photo-1495195129352-aeb325a55b65")' }}>
-            <div className="mask d-flex align-items-center h-100 gradient-custom-3">
-                <div className="container val">
-                    <div className="row d-flex justify-content-center align-items-center h-100">
-                        <div className="col-12 col-md-9 col-lg-7 col-xl-6">
-                            <div className="card align-items-center" style={{borderradius: 15}} >
-                                <div className="card-body p-5">
-                                    
-                                    <p>
-                                        {
-                                            Msg !== "" ? <span className="success">{Msg}</span> : <span className="error">{err}</span>
-                                        }
-                                    </p>
-                                    <p>
-                                        {
-                                            Msg1 !== "" ? <span className="success" >{Msg1}</span> : <span className="error"></span>
-                                        }
-                                    </p>
-                            
-                                    
-                                    <div className="form-outline mb-4">
-                                        <label htmlFor="matricule" className="form-label">Matricule:</label>
-                                        <input
-                                        type="text" value={matricule} name="matricule" className="form-control form-control-lg" 
-                                     onChange={(e)=>handleInputChange(e, 'matricule')} />
-                                    </div>
-                                    <div className="form-outline mb-4">
-                                        <label htmlFor="pass" className="form-label">PassWord:</label>
-                                        <input
-                                        type="password" value={pass} name="pass" className="form-control form-control-lg" onChange={(e)=>handleInputChange(e, 'pass')} />
-                                    </div>
-                                    
-                                    <div className="form-check d-flex jsutify-content-center mb-5">
-                                        <input className="form-check-input me-2" type="checkbox" defaultValue id="form2Exemple3g" onClick={() => setToggle(!toggle)}/>
-                                        <label className="form-check-label" htmlFor="form2Exemple3g">Connexion en tant que d'administrateur</label>
-                                    </div>
-                                    <div className="d-flex justify-content-center">
-                                        <input
-                                        type="submit"
-                                        defaultValue="Login"
-                                        className="btn btn-success btn-block btn-lg gradient-custom-4 text-body"
-                                        onClick={handleSubmit}
-                                        
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-        </section>
+    <div className="registration-popup">
+      <div className="registration-popup-content">
+        <h3>Création de Compte</h3>
+        <form className="registration-form" onSubmit={handleSubmit}>
+          <label>
+            Nom d'utilisateur:
+            <input 
+              type="text" 
+              name="username"
+              value={username} 
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
+          </label>
+          <label>
+            Matricule:
+            <input 
+              type="text" 
+              name="matricule"
+              value={matricule} 
+              onChange={(e) => setMatricule(e.target.value)}
+              required
+            />
+          </label>
+          <label>
+            Mot de passe:
+            <input 
+              type="password" 
+              name="password"
+              value={password} 
+              onChange={handlePasswordChange}
+              required
+            />
+            <small className={`password-strength ${passwordStrength.toLowerCase()}`}>
+              {passwordStrength} (min 4 chars, 1 number)
+            </small>
+          </label>
+          <label>
+            Confirmation Mot de passe:
+            <input 
+              type="password" 
+              name="confirmPassword"
+              value={confirmPassword}
+              onChange={handleConfirmPasswordChange}
+              required
+            />
+            {!passwordMatch && (
+              <small className="password-error">Passwords do not match</small>
+            )}
+          </label>
+          <label>
+            Role:
+            <select 
+              name="role"
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              required
+            >
+              <option value="user">User</option>
+              <option value="admin">Admin</option>
+            </select>
+          </label>
+          <div className="registration-buttons">
+            <button 
+              type="submit" 
+              className="registration-button registration-button-submit" 
+              disabled={!isFormValid}
+            >
+              Enregister
+            </button>
+            <button 
+              type="button" 
+              className="registration-button registration-button-close" 
+              onClick={onClose}
+            >
+              Fermer
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
-  )
+  );
 }
 
+export default Registration;

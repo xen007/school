@@ -3,6 +3,7 @@ import {FiPlusSquare} from '@react-icons/all-files/fi/FiPlusSquare';
 import axios from 'axios';
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import SidebarTeacher from '../dashboard/SidebarTeacher';
+import config from '../component/config';
 
 export default function ScheduleTeacher() {
   const [classe, setClasse] = useState('');
@@ -34,7 +35,7 @@ useEffect(()=>{
     const getClasse = async()=>{
       var headers = {"Accept":"application/json",
               "Content-Type": "application/json"};
-      await axios(`http://localhost/toungou-sch/api/enseignantNiveau.php/${matricule}`, headers)
+      await axios(`http://192.168.100.7/toungou-sch/api/enseignantNiveau.php/${matricule}`, headers)
       .then(response=>{
         setClData(response.data);
         console.log(response.data)
@@ -52,7 +53,7 @@ console.log(classeID)
         if(classeID !== ''){
           setDisabled(false);
           setText('Sélectionner la Classe');
-axios.get(`http://localhost/toungou-sch/api/enseignantClasse.php/${matricule}/${classeID}`, headers)
+axios.get(`http://192.168.100.7/toungou-sch/api/enseignantClasse.php/${matricule}/${classeID}`, headers)
 .then(response=>{ 
     console.log(response.data);
     setClDa(response.data);
@@ -71,7 +72,7 @@ function handleData (e){
   console.log(classId);
   console.log(matricule);
   if(disabled !== true){
-    axios.get(`http://localhost/toungou-sch/api/viewTeacherSchedule.php/${matricule}/${classId}`, headers)
+    axios.get(`http://192.168.100.7/toungou-sch/api/viewTeacherSchedule.php/${matricule}/${classId}`, headers)
     .then(response=>{
       console.log()
 

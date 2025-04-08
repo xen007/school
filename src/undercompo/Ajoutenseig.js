@@ -4,6 +4,7 @@ import React, {useState} from 'react';
 import axios from 'axios';
 
 import { useNavigate } from 'react-router-dom';
+import config from '../component/config';
 
 
 export default function Ajoutenseig(){
@@ -48,7 +49,7 @@ export default function Ajoutenseig(){
         formData.append('tel',Tel)
         formData.append('cv', cv);
         console.log(formData);
-        const response = await axios.post('http://localhost/ssm/api/ajoutenseig.php',formData,{ //envoi de la liste de données à l'api avec la method post
+        const response = await axios.post(`${config.apiBaseUrl}/ajoutenseig.php`,formData,{ //envoi de la liste de données à l'api avec la method post
             headers:{"Content-Type": "multipart/form-data"},//type de données receptible
         })
 

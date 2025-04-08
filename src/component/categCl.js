@@ -2,15 +2,16 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate} from "react-router-dom";
 import {PencilSquare, Plus} from 'react-bootstrap-icons';
-
+import config from './config';
 export default function CategCl(){ //creation de la fonction principaLe
     // fonction pour recuperer les donnees de la classe
 
     
+    
     const[categ,setCategData] = useState([])
     useEffect( () => {
         const getCateg = async()=>{
-        const reqdata = await fetch("http://localhost/ssm/api/categCl.php")
+        const reqdata = await fetch(`${config.apiBaseUrl}/categCl.php`)
         const resdata = await reqdata.json()
         // console.log(resdata)
         setCategData(resdata)

@@ -1,11 +1,9 @@
 import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import AuthContext from '../context/AuthProvider';
+import config from '../component/config';
 
 export default function MarksAdmin() {
-    const { auth } = useContext(AuthContext);
-    const { setAuth } = useContext(AuthContext);
     const [classe, setClasse] = useState('');
     const [seq, setSeq] = useState('');
     const [matiere, setMatiere] = useState('');
@@ -23,7 +21,7 @@ export default function MarksAdmin() {
      setClData([]);   
     var headers = {"Accept":"application/json",
         "Content-Type": "application/json"};
-       await axios.get(`http://localhost/ssm/api/handleClasseAdmin.php`, headers)
+       await axios.get(`${config.apiBaseUrl}/handleClasseAdmin.php`, headers)
         .then(response=>{
             setClData(response.data);
             handleSeq();
@@ -37,7 +35,7 @@ export default function MarksAdmin() {
       
       var headers = {"Accept":"application/json",
           "Content-Type": "application/json"};
-         await axios.get(`http://localhost/ssm/api/Sequence.php`, headers)
+         await axios.get(`${config.apiBaseUrl}/Sequence.php`, headers)
           .then(response=>{
               setClSeq(response.data);
           },[])
@@ -55,7 +53,7 @@ export default function MarksAdmin() {
           //setmatStudent(trial) 
               if(trial !== ''){ 
                   console.log(trial);
-                  axios.get(`http://localhost/ssm/api/ajoutScheduleSub.php/${trial}`, headers)
+                  axios.get(`${config.apiBaseUrl}/ajoutScheduleSub.php/${trial}`, headers)
                   .then(response=>{
                       console.log(response.data);
                       setMatiereData(response.data);
@@ -71,7 +69,7 @@ export default function MarksAdmin() {
             setMatiere(subject);
     
             try {
-                const response = await axios.get(`http://localhost/ssm/api/handleStudents.php/${classe}`, {
+                const response = await axios.get(`${config.apiBaseUrl}/handleStudents.php/${classe}`, {
                     headers: { "Accept": "application/json", "Content-Type": "application/json" }
                 });
                 setStudentInfo(response.data);
@@ -101,7 +99,7 @@ export default function MarksAdmin() {
         // requete conditionné 
         try { 
             const response = await axios.post(
-                'http://localhost/ssm/api/RegisterMarks.php',
+                `${config.apiBaseUrl}/RegisterMarks.php`,
                 formData,
                 {
                     headers: {
@@ -117,7 +115,6 @@ export default function MarksAdmin() {
             setSeq('');
             setMatiere('');
             navigate('/noteAdmin')
-            setAuth(true);
         } catch (error) { //syntax pour renvoi de l'erreur en cas d'erreur
             console.error('Error submitting marks:', error);
             alert('Error submitting marks, please try again.');

@@ -1,0 +1,18 @@
+.card-container {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  @media print {
+    .card-container {
+      width: 100%;
+      box-shadow: none;
+    }
+  
+    .btn-primary {
+      display: none;
+    }
+  }

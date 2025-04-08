@@ -3,6 +3,7 @@ import React, { useEffect, useState,useRef } from "react";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { useReactToPrint } from "react-to-print";
+import config from '../component/config';
 export default function Mod({data}) {
   const [show, setShow] = useState(false);
 
@@ -14,7 +15,7 @@ const id= data.matricule
     const[noData, setnoData] = useState([])
     useEffect ( () => {
         const getnoData = async() =>{
-            const requestData = await fetch("http://localhost/ssm/api/notes.php/"+ id)
+            const requestData = await fetch(`${config.apiBaseUrl}/notes.php/`+ id)
             const responseData = await requestData.json()
             setnoData(responseData)
             // setFormvalue(responseData)

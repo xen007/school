@@ -20,6 +20,11 @@ require('db.php');
             $niveau = checkInput($_POST['niveau']);
             $classe = checkInput($_POST['classe']);
             $redoublant = checkInput($_POST['redoublant']);
+            $sante = checkInput($_POST['sante']);
+            $ancienete = checkInput($_POST['ancienete']);
+            $acte = checkInput($_POST['acte']);
+            $ethnie = checkInput($_POST['ethnie']);
+            $malade = checkInput($_POST['malade']);
             $scolaire = checkInput($_POST['scolaire']);
             $message = checkInput($_POST['infoSup']);
 
@@ -35,9 +40,11 @@ require('db.php');
                 $photo_temp='';
                 $dest=$_SERVER['DOCUMENT_ROOT'].'/ssm/api/image'."/".$photo;
             }
-            
-            $result = mysqli_query($db_connect, "INSERT INTO eleve (matricule_EL, nom, prenom, dateNaiss, lieuNaiss, adresse, genre, tuteur, numero_tuteur,profession_tuteur,mere,numero_mere,profession_mere, niveau, classe,redoublant, annee_scolaire, photo, infos_supplementaire, date_enregistrement) 
-            VALUES ('$matricule','$nom' ,'$prénom', '$datenaiss', '$lieunaiss', '$adresse', '$genre', '$tuteur', '$phone','$ptuteur','$mere','$phoneM','$pmere', '$niveau' , '$classe','$redoublant', '$scolaire','$photo','$message', NOW())" );
+            $result = mysqli_query($db_connect, "INSERT INTO eleve (matricule_EL, nom, prenom, dateNaiss, lieuNaiss, adresse, genre, tuteur, numero_tuteur,profession_tuteur,mere,numero_mere,profession_mere, niveau, classe,redoublant,ancienete,  annee_scolaire, photo, infos_supplementaire, acte,sante,date_enregistrement,
+            ethnie, malade) 
+            VALUES ('$matricule','$nom' ,'$prénom', '$datenaiss', '$lieunaiss', '$adresse', '$genre', '$tuteur', '$phone','$ptuteur','$mere','$phoneM','$pmere', '$niveau' , '$classe','$redoublant', '$ancienete', '$scolaire','$photo','$message', '$acte', '$sante', NOW(), 
+            '$ethnie', '$malade' )" );
+
                 if($result){
                     // stocker les informations relatives a la photo
                     move_uploaded_file($photo_temp,$dest);

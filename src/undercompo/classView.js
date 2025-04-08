@@ -4,6 +4,7 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import './stview.css'
 import { Eye } from "react-bootstrap-icons";
+import config from '../component/config';
 // fonction principale
 export default function ClassView({data}) {
   // déclaration des constantes
@@ -24,7 +25,7 @@ const[sub,setSub]= useState([])
 useEffect( ()=>{
   // récupération des informations de la classe
   const getSubject= async()=>{
-    const reqdata = await fetch("http://localhost/ssm/api/clView.php/"+id)
+    const reqdata = await fetch(`${config.apiBaseUrl}/clView.php/`+id)
     const resdata = await reqdata.json()
     // console.log(resdata)
       setSub(resdata)
@@ -102,14 +103,13 @@ useEffect( ()=>{
                 </form>
                 <div className='container'>
                     <div className='row'>
-                        <h3><strong>Liste des matières disponibles</strong></h3>  
+                        <h3><strong>Liste des élèves</strong></h3>  
                         <table className='table table-striped table-bordered w-auto'>
                             <thead>
                                 <tr>
                                     <th>Sr No</th>
-                                    <th>libellé_Matière</th>
-                                    <th>Nom_E_</th>
-                                    <th>Coef</th>
+                                    <th>Nom</th>
+                                    <th>Prenom</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -119,8 +119,7 @@ useEffect( ()=>{
                                 <tr key={index}>
                                     <td>{index+1}</td>
                                     <td>{subData.nom}</td>
-                                    <td>{subData.ens}</td>
-                                    <td>{subData.coef}</td>
+                                    <td>{subData.prenom}</td>
                                 </tr>
                                     ))
                                 }

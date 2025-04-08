@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { PencilSquare, Plus } from "react-bootstrap-icons";
+import config from './config';
 
 export default function Evaluation(){ //fonction principale
     // declaration de la consrante pour stocker les matieres
@@ -20,7 +21,7 @@ export default function Evaluation(){ //fonction principale
         getEval()
     },[])
     const getSubject= async()=>{
-        const reqdata = await fetch("http://localhost/ssm/api/mat.php")
+        const reqdata = await fetch(`${config.apiBaseUrl}/mat.php`)
         const resdata = await reqdata.json()
             // if(resdata.resultat !== 'Verifiez les informations SVP'){
             // const result = resdata.sort((a,b) => a.niv.localeCompare(b.niv))
@@ -30,7 +31,7 @@ export default function Evaluation(){ //fonction principale
             
     }
     const getEval= async()=>{
-        const reqdata = await fetch("http://localhost/ssm/api/eval.php")
+        const reqdata = await fetch(`${config.apiBaseUrl}/eval.php`)
         const resdata = await reqdata.json()
             if(resdata.resultat !== 'Verifiez les informations SVP'){
             const result = resdata.sort((a,b) => a.niveau.localeCompare(b.niveau))
@@ -46,7 +47,7 @@ export default function Evaluation(){ //fonction principale
         getNiveau()
     },[])
     const getNiveau=async()=>{
-        const req = await  fetch('http://localhost/ssm/api/niveau.php/')
+        const req = await  fetch(`${config.apiBaseUrl}/niveau.php/`)
         const res = await req.json()
         setNiveau(res)
     }

@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useContext} from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import AuthContext from '../context/AuthProvider';
+import config from '../component/config';
 
 
 export default function AddSchedule() {
@@ -13,8 +13,6 @@ export default function AddSchedule() {
     const [ddc, setDDC] = useState('');
     const [fdc, setFDC] = useState('');
     const [jour, setJour] = useState('');
-    const {setAuth} = useContext(AuthContext);
-    const {auth} = useContext(AuthContext);
     const navigate = useNavigate();
 
     useEffect(()=>{
@@ -31,7 +29,7 @@ function AddSUb(classe_id){
 //e.preventDefault();
 var headers = {"Accept":"application/json",
     "Content-Type": "application/json"}; // entête donnant les droit au script d'effectuer des modifications
-axios.get(`http://localhost/ssm/api/ajoutScheduleSub.php/${classe_id}`, headers) //api pour liant le script à une page php avec la method get
+axios.get(`${config.apiBaseUrl}/ajoutScheduleSub.php/${classe_id}`, headers) //api pour liant le script à une page php avec la method get
 .then(response=>{
     setMatiereData(response.data);
       console.log(response.data);
@@ -43,7 +41,7 @@ function AddClasse(){
     var headers = {"Accept":"application/json",
         "Content-Type": "application/json"};
 
-axios.get(`http://localhost/ssm/api/ajoutScheduleClass.php`, headers)
+axios.get(`${config.apiBaseUrl}/ajoutScheduleClass.php`, headers)
 .then(response=>{
     setClData(response.data);
     console.log(response.data);
@@ -54,7 +52,7 @@ axios.get(`http://localhost/ssm/api/ajoutScheduleClass.php`, headers)
 function AddSalle(classe_id){
   var headers = {"Accept":"application/json",
       "Content-Type": "application/json"};
-axios.get(`http://localhost/ssm/api/ajoutScheduleSalle.php/${classe_id}`, headers)
+axios.get(`${config.apiBaseUrl}/ajoutScheduleSalle.php/${classe_id}`, headers)
 .then(response=>{
   setNiveauData(response.data);
   console.log(response.data);
@@ -65,8 +63,8 @@ axios.get(`http://localhost/ssm/api/ajoutScheduleSalle.php/${classe_id}`, header
         //e.preventDefault();
         var headers = {"Accept":"application/json",
             "Content-Type": "application/json"};
-      console.log(`http://localhost/ssm/api/ajoutScheduleEns.php/${Matiere}/${day}`)      
-    axios.get(`http://localhost/ssm/api/ajoutScheduleEns.php/${Matiere}/${day}`, headers)
+      console.log(`${config.apiBaseUrl}/ajoutScheduleEns.php/${Matiere}/${day}`)      
+    axios.get(`${config.apiBaseUrl}/ajoutScheduleEns.php/${Matiere}/${day}`, headers)
     .then(response=>{
         // console.log(response.data);
         setEnseigData(response.data);
@@ -79,7 +77,7 @@ function Addday(e){
     //e.preventDefault();
     var headers = {"Accept":"application/json",
             "Content-Type": "application/json"};
-    axios.get(`http://localhost/ssm/api/ajoutday.php`, headers)
+    axios.get(`${config.apiBaseUrl}/ajoutday.php`, headers)
 .then(response=>{
     console.log(response.data);
     setJourData(response.data);
@@ -123,18 +121,15 @@ const handleDay = async (e) => {
         ftime: fdc,
         jour: jour
       } 
-      console.log(formData);
-      await axios.post('http://localhost/ssm/api/EnregisterSchedule.php',formData,{ //api pour liant le script à une page php avec la method post
+      await axios.post(`${config.apiBaseUrl}/EnregisterSchedule.php`,formData,{ //api pour liant le script à une page php avec la method post
             headers:{"Content-Type": "multipart/form-data"},
         })
         .then(response=>{
           console.log(response.data.stutus);
           alert(response.data.status)
-          setAuth(true); 
+          
       })
-     if(auth){
-      navigate('/emplois')
-     } 
+    
     }
     const handleSubmit = async(e) =>{ //fxn handleSubmit appel la fxn registerSchedule;
         e.preventDefault()

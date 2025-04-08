@@ -1,0 +1,96 @@
+.main-container {
+  padding: 10px;
+}
+
+
+.print-button:hover {
+  background-color: #0056b3;
+}
+
+.image-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.background-image {
+  max-width: 100%;
+  height: auto;
+
+}
+
+#heads {
+  padding: 10px 50px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+  font-size: 15px;
+  position: absolute;
+  top: 10px;
+}
+
+#middles {
+  text-align: center;
+  font-size: 20px;
+  position: absolute;
+  top: 150px; /* Adjusted to a suitable position */
+  width: 100%;
+}
+#tex{
+  position: absolute;
+  top: 190px;
+  left: 50px;
+  font-size: 23px;
+}
+
+#tex #nom {
+  font-size: 27px;
+  font-weight: bold;
+  font-family:cursive,'Times New Roman', serif;
+}
+
+#dte { 
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  position: absolute; 
+  font-size: 23px; 
+  font-weight: bold; 
+  top: 590px; 
+  font-style: italic; 
+}
+p {
+  margin-bottom: 0px;
+}
+#tiC{
+  font-size: 27px;
+  margin-bottom: 15px;
+  margin-left: 330px;
+  color: rgb(15, 15, 104);
+  font-weight: 700;
+  font-family: 'Lucida Handwriting', Georgia, 'Times New Roman', Times, serif;
+}
+
+#remd {
+  position: absolute;
+  font-size: 35px;
+  font-weight: bold;
+  top: 680px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  color: green;
+  font-family: Ravie ,Georgia, 'Times New Roman', Times, serif;
+}
+/* certificate.css */
+.modal-90w {
+  max-width: 90% !important;
+  max-height: 90% !important;
+}
+
+.modal-body {
+  max-height: calc(100vh - 210px);
+  overflow-y: auto;
+}

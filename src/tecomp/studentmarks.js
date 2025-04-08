@@ -1,21 +1,26 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-
+import config from '../component/config';
+ 
 export default function StudentMark() {
   const [seq, setSeq] = useState([]);
-  const [note, setNote] = useState({});
   const [niveau, setNiveau] = useState([]);
+  const [niveauData, setNiveauData] = useState([]);
   const [evaluation, setEvaluation] = useState([]);
   const [evalData, setEvalData] = useState([]);
   const [student, setStudent] = useState([]);
-  const [studentData, setStudentData] = useState([]);
   const [subject, setSubject] = useState([]);
   const [subData, setSubData] = useState([]);
   const [classData, setClassData] = useState([]);
   const [classe, setClasse] = useState([]);
-  const [enable, setEnable] = useState(true);
-  const [text, setText] = useState("Selectionnez d'abord le niveau");
+  const [studentData, setStudentData] = useState([]);
+  const [note, setNote] = useState({});
+  const [enableNiveau, setEnableNiveau] = useState(true);
+  const [enableMatiere, setEnableMatiere] = useState(true);
+  const [enableEvaluation, setEnableEvaluation] = useState(true);
+  const [text, setText] = useState("Selectionnez d'abord la classe");
+  const [bareme, setBareme] = useState(null);
   const navigate = useNavigate();
 
   const [formvalue, setFormValue] = useState({
@@ -25,9 +30,26 @@ export default function StudentMark() {
     matiere: '',
   });
 
+  const role = sessionStorage.getItem('userRole');
+  const matricule = sessionStorage.getItem('matricule');
+
   const handleInput = (e) => {
     setFormValue({ ...formvalue, [e.target.name]: e.target.value });
   };
+
+  const getClasse = useCallback(async () => {
+    const reqdata = await fetch(`${config.apiBaseUrl}/classe.php`);
+    const resdata = await reqdata.json();
+
+    if (role === 'admin') {
+      setClasse(resdata);
+      setClassData(resdata);
+    } else {
+      const filteredClasses = resdata.filter(s => s.enseignant === matricule);
+      setClasse(filteredClasses);
+      setClassData(filteredClasses);
+    }
+  }, [matricule, role]);
 
   useEffect(() => {
     getNiveau();
@@ -36,10 +58,10 @@ export default function StudentMark() {
     getEval();
     getSeq();
     getStudent();
-  }, []);
+  }, [getClasse]);
 
   const getStudent = async () => {
-    const requestData = await fetch("http://localhost/ssm/api/l.php");
+    const requestData = await fetch(`${config.apiBaseUrl}/l.php`);
     const responseData = await requestData.json();
     if (responseData.resultat !== 'Verifiez les informations SVP') {
       const result = responseData.sort((a, b) => a.nom.localeCompare(b.nom));
@@ -48,65 +70,106 @@ export default function StudentMark() {
   };
 
   const getNiveau = async () => {
-    const req = await fetch('http://localhost/ssm/api/niveau.php/');
+    const req = await fetch(`${config.apiBaseUrl}/niveau.php`);
     const res = await req.json();
     setNiveau(res);
   };
 
   const getSubject = async () => {
-    const reqdata = await fetch("http://localhost/ssm/api/mat.php");
+    const reqdata = await fetch(`${config.apiBaseUrl}/mat.php`);
     const resdata = await reqdata.json();
     setSubject(resdata);
   };
 
-  const getClasse = async () => {
-    const reqdata = await fetch("http://localhost/ssm/api/classe.php");
-    const resdata = await reqdata.json();
-    setClasse(resdata);
-  };
-
   const getEval = async () => {
-    const reqdata = await fetch("http://localhost/ssm/api/eval.php");
+    const reqdata = await fetch(`${config.apiBaseUrl}/eval.php`);
     const resdata = await reqdata.json();
     setEvaluation(resdata);
   };
 
   const getSeq = async () => {
-    const reqdata = await fetch("http://localhost/ssm/api/sequence.php");
+    const reqdata = await fetch(`${config.apiBaseUrl}/sequence.php`);
     const resdata = await reqdata.json();
     setSeq(resdata);
   };
 
+  const handleClass = (e) => {
+    const classId = e.target.value;
+    setFormValue({ ...formvalue, classe: classId });
+
+    if (classId !== "") {
+      const selectedClass = classe.find(c => c.idClasse === classId);
+      if (selectedClass) {
+        const selectedNiveau = niveau.find(n => n.id === selectedClass.niveau);
+        setNiveauData(selectedNiveau ? [selectedNiveau] : []);
+        setEnableNiveau(false);
+        setEnableMatiere(true);
+        setEnableEvaluation(true);
+        setText("Selectionnez");
+        setStudentData(student.filter(s => s.cl === classId));
+      }
+    } else {
+      setText("Selectionnez d'abord la classe");
+      setNiveauData([]);
+      setEnableNiveau(true);
+      setEnableMatiere(true);
+      setEnableEvaluation(true);
+    }
+  };
+
   const handleNiveau = (e) => {
     const niveauId = e.target.value;
-    setFormValue({ ...formvalue, niveau: niveauId });
     if (niveauId !== "") {
       setSubData(subject.filter(s => s.niv === niveauId));
-      setClassData(classe.filter(s => s.niveau === niveauId));
-      setEnable(false);
-      setText('Selectionnez la matiere');
+      setEnableMatiere(false);
+      setEnableEvaluation(true);
+      setText("Selectionnez");
     } else {
       setText("Selectionnez d'abord le niveau");
       setSubData([]);
-      setEnable(true);
+      setEnableMatiere(true);
+      setEnableEvaluation(true);
     }
   };
 
   const handleEval = (e) => {
     setFormValue({ ...formvalue, [e.target.name]: e.target.value });
     setEvalData(evaluation.filter(s => s.idMat === e.target.value));
+    setEnableEvaluation(false);
   };
 
-  const handleStud = (e) => {
-    setFormValue({ ...formvalue, [e.target.name]: e.target.value });
-    setStudentData(student.filter(s => s.cl === e.target.value));
+  const handleg = (e) => {
+    const selectedEvaluationId = e.target.value;
+    setFormValue({ ...formvalue, evaluation: selectedEvaluationId });
+
+    const selectedEval = evaluation.find(eva => eva.ideval === selectedEvaluationId);
+
+    if (selectedEval) {
+      setBareme(parseInt(selectedEval.bareme, 10)); // Ensure bareme is an integer
+    } else {
+      setBareme(null);
+    }
   };
 
   const handleChange = (setter, key, value) => {
-    setter(prev => ({ ...prev, [key]: value ? value : null }));
+    if (value > bareme) {
+      alert(`La note ne peut pas dépasser ${bareme}.`);
+      setter(prev => ({ ...prev, [key]: '' })); // Clear the value if it's greater than bareme
+    } else if (value < 0) {
+      alert(`La note ne peut pas être inférieure à 0.`);
+      setter(prev => ({ ...prev, [key]: '' })); // Clear the value if it's less than 0
+    } else {
+      setter(prev => ({ ...prev, [key]: value }));
+    }
   };
 
   const handleSubmit = async () => {
+    const isConfirmed = window.confirm('Êtes-vous sûr de vouloir soumettre ces notes?');
+
+    if (!isConfirmed) {
+      return;
+    }
+
     const formData = {
       evaluation: formvalue.evaluation,
       classe: formvalue.classe,
@@ -120,12 +183,12 @@ export default function StudentMark() {
     };
 
     try {
-      const response = await axios.post('http://localhost/ssm/api/RegisterMarks.php', formData);
+      const response = await axios.post(`${config.apiBaseUrl}/RegisterMarks.php`, formData);
       alert(response.data.message);
       if (response.status === 200) {
         setTimeout(() => {
-          navigate('/noteAdmin')
-      }, 1000);
+          navigate('/noteAdmin');
+        }, 1000);
         console.log('Data successfully sent to the backend');
       } else {
         console.error('Failed to send data');
@@ -144,15 +207,24 @@ export default function StudentMark() {
           <div className="col-sm-12">
             <div className="row mb-2">
               <div className="form-group col-md-2">
+                <label className="mb-2">Classe</label>
+                <select id='classe' name="classe" onChange={handleClass} className="form-control">
+                  <option value="">{text}</option>
+                  {classData.map((nData, index) => (
+                    <option key={index} value={nData.idClasse}>{nData.libellé_classe}</option>
+                  ))}
+                </select>
+              </div>
+             
+              <div className="form-group col-md-2">
                 <label className="mb-2">Niveau</label>
-                <select id='niveau' name="niveau" className="form-control" onChange={handleNiveau}>
+                <select id='niveau' name="niveau" className="form-control" onChange={handleNiveau} disabled={enableNiveau}>
                   <option value="">Selectionnez le Niveau</option>
-                  {niveau.map((nData, index) => (
+                  {niveauData.map((nData, index) => (
                     <option key={index} value={nData.id}>{nData.libellee_niveau}</option>
                   ))}
                 </select>
               </div>
-              
               <div className="form-group col-md-2">
                 <label>Sequence</label>
                 <select id='seq' name='seq' className="form-select" onChange={handleInput}>
@@ -164,7 +236,7 @@ export default function StudentMark() {
               </div>
               <div className="form-group col-md-2">
                 <label className="mb-2">Matiere</label>
-                <select id='matiere' name="matiere" disabled={enable} onChange={handleEval} className="form-control">
+                <select id='matiere' name="matiere" disabled={enableMatiere} onChange={handleEval} className="form-control">
                   <option value="">{text}</option>
                   {subData.map((nData, index) => (
                     <option key={index} value={nData.idMat}>{nData.nom}</option>
@@ -173,25 +245,25 @@ export default function StudentMark() {
               </div>
               <div className="form-group col-md-2">
                 <label>Evaluation</label>
-                <select id='evaluation' name='evaluation' className="form-select" onChange={handleInput} disabled={enable}>
+                <select id='evaluation' name='evaluation' className="form-select" onChange={handleg} disabled={enableEvaluation}>
                   <option>Select the Evaluation</option>
                   {evalData.map((nData, index) => (
                     <option key={index} value={nData.ideval}>{nData.nom}</option>
                   ))}
                 </select>
               </div>
-              <div className="form-group col-md-2">
-                <label className="mb-2">Classe</label>
-                <select id='classe' name="classe" disabled={enable} onChange={handleStud} className="form-control">
-                  <option value="">{text}</option>
-                  {classData.map((nData, index) => (
-                    <option key={index} value={nData.idClasse}>{nData.libellé_classe}</option>
-                  ))}
-                </select>
-              </div>
             </div>
           </div>
         </div>
+        {bareme && (
+          <div className="enseignant row">
+            <div className="col-sm-12">
+              <div className="alert alert-info">
+                <strong>Barème: </strong>{bareme}
+              </div>
+            </div>
+          </div>
+        )}
         <div className="enseignant row main-container">
           <div className="col-auto contain">
             <table className="table table-striped table-bordered w-100 fixed-height-table">
@@ -213,7 +285,10 @@ export default function StudentMark() {
                       <input
                         type="number"
                         name="note"
+                        value={note[student.matricule] || ""}
                         onChange={(e) => handleChange(setNote, student.matricule, e.target.value)}
+                        min="0"
+                        max={bareme}
                       />
                     </td>
                   </tr>
@@ -222,11 +297,9 @@ export default function StudentMark() {
             </table>
           </div>
         </div>
-        
-        <button className='btn btn-secondary m-2' onClick={()=>{navigate('/noteAdmin')}}>Retour</button>
-        <button onClick={handleSubmit} className="btn btn-success">Enregister</button>
-       
+        <button className='btn btn-secondary m-2' onClick={() => { navigate('/noteAdmin') }}>Retour</button>
+        <button onClick={handleSubmit} className="btn btn-success">Enregistrer</button>
       </main>
     </>
   );
-}
+}  

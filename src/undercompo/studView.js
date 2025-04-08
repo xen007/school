@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react"
 import './stview.css'
 import { useNavigate, useParams } from "react-router-dom"
+import config from '../component/config';
 // fonction principale
 export default function StudView(){
     // declaration des constantes
@@ -23,7 +24,7 @@ export default function StudView(){
     const {matricule} = useParams()
     useEffect ( () => {
         const userRowdata = async() =>{
-            const getUserdata = await fetch("http://localhost/ssm/api/vue.php/"+matricule)
+            const getUserdata = await fetch(`${config.apiBaseUrl}/vue.php/`+matricule)
             const resuserdata = await getUserdata.json()
             // console.log(resuserdata)
             setFormvalue(resuserdata)
@@ -41,7 +42,7 @@ export default function StudView(){
 </div>
 
 <div className="card imgholder imgholder  col-md-4 col-lg-4">
-    <img src={`http://localhost/ssm/api/image/${formvalue.photo}`} alt={formvalue.photo} width="200" height="200" className="showImg" />
+    <img src={`${config.apiBaseUrl}/image/${formvalue.photo}`} alt={formvalue.photo} width="200" height="200" className="showImg" />
 </div>
 
 <div className="modal-body col-sm-6">

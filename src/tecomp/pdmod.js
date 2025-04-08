@@ -19,7 +19,7 @@ export default function Pdmod() {
         console.log(formData);
         //window.location.reload();
         if(newpass === confirmpass){
-            axios.post(`http://localhost/ssm/api/modmp.php/${matricule}`,formData,{
+            axios.post(`http://192.168.100.7/ssm/api/modmp.php/${matricule}`,formData,{
                 headers:{"Content-Type": "multipart/form-data"},
             })
         }else{

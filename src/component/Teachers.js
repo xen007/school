@@ -7,6 +7,7 @@ import Popup3 from '../popup/popup3';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Eye, PencilSquare, Plus} from 'react-bootstrap-icons';
+import config from './config';
 
 export default function Teacher() {
 
@@ -23,7 +24,7 @@ export default function Teacher() {
         //e.preventDefault();
         var headers = {"Accept":"application/json",
             "Content-Type": "application/json"};
-    axios.get(`http://localhost/ssm/api/tabenseig.php`, headers)
+    axios.get(`${config.apiBaseUrl}/tabenseig.php`, headers)
     .then(response=>{ //mise à jour des constances déclaré
         setEnseig(response.data);
         setRecord(response.data)

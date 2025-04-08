@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import {PencilSquare} from 'react-bootstrap-icons';
+import config from '../component/config';
 
 export default function Sequence(){ //creation de la fonction principaLe
     //declaration de la variable pour stocker les classes 
@@ -10,7 +11,7 @@ export default function Sequence(){ //creation de la fonction principaLe
     const {id} = useParams()
     useEffect( ()=>{
       const getclasse= async()=>{
-          const reqdata = await fetch("http://localhost/ssm/api/dates.php/" +id)
+          const reqdata = await fetch(`${config.apiBaseUrl}/dates.php/` +id)
           const resdata = await reqdata.json()
           setClData(resdata)
           }

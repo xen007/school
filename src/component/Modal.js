@@ -54,7 +54,7 @@
 //   useEffect(() => {
 //     // Assuming data is fetched from an endpoint
 //     const fetchData = async () => {
-//       const response = await fetch('http://localhost/ssm/api/testpsc.php/');
+//       const response = await fetch('${config.apiBaseUrl}/testpsc.php/');
 //       const result = await response.json();
 //       setData(result);
 //     };
@@ -135,7 +135,7 @@
 //   useEffect(() => {
 //     // Assuming data is fetched from an endpoint
 //     const fetchData = async () => {
-//       const response = await fetch('http://localhost/ssm/api/testpsc.php/');
+//       const response = await fetch('${config.apiBaseUrl}/testpsc.php/');
 //       const result = await response.json();
 //       setData(result);
 //     };
@@ -308,7 +308,7 @@
 
 //   useEffect(() => {
 //     const fetchData = async () => {
-//       const response = await fetch('http://localhost/ssm/api/testpsc.php'); // Change this to your actual endpoint
+//       const response = await fetch('${config.apiBaseUrl}/testpsc.php'); // Change this to your actual endpoint
 //       const result = await response.json();
 //       setData(result);
 //       groupData(result);
@@ -431,7 +431,7 @@
 
 //   useEffect(() => {
 //     const fetchData = async () => {
-//       const response = await fetch('http://localhost/ssm/api/testpsc.php'); // Change this to your actual endpoint
+//       const response = await fetch('${config.apiBaseUrl}/testpsc.php'); // Change this to your actual endpoint
 //       const result = await response.json();
 //       setData(result);
 //       groupData(result);
@@ -604,7 +604,7 @@
 
 //   useEffect(() => {
 //     const fetchData = async () => {
-//       const response = await fetch('http://localhost/ssm/api/testpsc.php'); // Change this to your actual endpoint
+//       const response = await fetch('${config.apiBaseUrl}/testpsc.php'); // Change this to your actual endpoint
 //       const result = await response.json();
 //       setData(result);
 //       groupData(result);
@@ -956,7 +956,7 @@
 
 //   useEffect(() => {
 //     const fetchData = async () => {
-//       const response = await fetch('http://localhost/ssm/api/testpsc.php'); // Change this to your actual endpoint
+//       const response = await fetch('${config.apiBaseUrl}/testpsc.php'); // Change this to your actual endpoint
 //       const result = await response.json();
 //       setData(result);
 //       groupData(result);
@@ -1303,6 +1303,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import ReactToPrint from "react-to-print";
 import { PrinterFill } from 'react-bootstrap-icons';
+import config from './config';
 
 const Evaluation = () => {
   const [groupedData, setGroupedData] = useState({});
@@ -1332,7 +1333,7 @@ const Evaluation = () => {
 } 
 useEffect( () => {
   const getNiveau = async()=>{
-      const reqdata = await fetch("http://localhost/ssm/api/niveau.php")
+      const reqdata = await fetch(`${config.apiBaseUrl}/niveau.php`)
       const resdata = await reqdata.json()
       // console.log(resdata)
       setNiveauData(resdata)
@@ -1340,7 +1341,7 @@ useEffect( () => {
       getNiveau()
 
       const getclasse= async()=>{
-        const reqdata = await fetch("http://localhost/ssm/api/classe.php")
+        const reqdata = await fetch(`${config.apiBaseUrl}/classe.php`)
         const resdata = await reqdata.json()
         setClData(resdata)
       }
@@ -1348,7 +1349,7 @@ useEffect( () => {
   },[])
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch('http://localhost/ssm/api/testpsc.php'); // Change this to your actual endpoint
+      const response = await fetch(`${config.apiBaseUrl}/testpsc.php`); // Change this to your actual endpoint
       const result = await response.json();
       groupData(result);
     };
@@ -1547,7 +1548,7 @@ useEffect( () => {
             <div id="head">
               <div id='botto'>
                 <div>
-                  <img src={`http://localhost/ssm/api/image/${groupedData[matricule].eleve.photo}`}    alt={groupedData[matricule].eleve.photo} style={{ width: "90px", paddingRight: "10px" }} />
+                  <img src={`${config.apiBaseUrl}/image/${groupedData[matricule].eleve.photo}`}    alt={groupedData[matricule].eleve.photo} style={{ width: "90px", paddingRight: "10px" }} />
                 </div>
                 <div>
                   <p>Nom et Prénoms: <strong> {groupedData[matricule].eleve.nom}{groupedData[matricule].eleve.prenom} </strong></p>

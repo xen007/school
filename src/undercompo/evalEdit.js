@@ -2,6 +2,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import config from '../component/config';
 // fonction principale
 export default function EvalEdit(){
     // declaration des constantes
@@ -13,7 +14,7 @@ export default function EvalEdit(){
     useEffect( ()=>{
         // recuperation des données sur la matiere
       const getEval= async()=>{
-          const reqdata = await fetch("http://localhost/ssm/api/eval.php/"+ideval)
+          const reqdata = await fetch(`${config.apiBaseUrl}/eval.php/`+ideval)
           const resdata = await reqdata.json()
 
           setFormvalue(resdata)
@@ -34,7 +35,7 @@ export default function EvalEdit(){
            bareme:formvalue.bareme,
            niveau:formvalue.niveau,
         }
-        const res = await axios.put('http://localhost/ssm/api/eval.php', formData)
+        const res = await axios.put(`${config.apiBaseUrl}/eval.php`, formData)
         if(res.data.success){
             setMessage(res.data.success)
             setTimeout(() => {
@@ -48,7 +49,7 @@ export default function EvalEdit(){
         getSubject()
     },[])
     const getSubject= async()=>{
-        const reqdata = await fetch("http://localhost/ssm/api/mat.php")
+        const reqdata = await fetch(`${config.apiBaseUrl}/mat.php`)
         const resdata = await reqdata.json()
             setSubjectData(resdata)
             setSubData(resdata)
@@ -70,7 +71,7 @@ export default function EvalEdit(){
         getNiveau()
     },[])
     const getNiveau=async()=>{
-        const req = await  fetch('http://localhost/ssm/api/niveau.php/')
+        const req = await  fetch(`${config.apiBaseUrl}/niveau.php/`)
         const res = await req.json()
         setNiveau(res)
     }

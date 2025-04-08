@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import ClassView from "./classView"
+import config from '../component/config';
 // fonction principale
 export default function LevView(){
 
@@ -12,7 +13,7 @@ const {idNiv} = useParams()
 useEffect(()=>{
     // installation
     const getClas =async()=>{
-        const req = await fetch('http://localhost/ssm/api/nivView.php/'+idNiv)
+        const req = await fetch(`${config.apiBaseUrl}/nivView.php/`+idNiv)
         const resul = await req.json()
         setClVal(resul)
      }

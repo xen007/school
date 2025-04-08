@@ -33,7 +33,7 @@ export default function NoteAdmin() {
    setClData([]);   
   var headers = {"Accept":"application/json",
       "Content-Type": "application/json"};
-     await axios.get(`http://localhost/ssm/api/handleClasseAdmin.php`, headers)
+     await axios.get(`http://192.168.100.7/ssm/api/handleClasseAdmin.php`, headers)
       .then(response=>{
           setClData(response.data);
           handleSeq();
@@ -47,7 +47,7 @@ export default function NoteAdmin() {
     
     var headers = {"Accept":"application/json",
         "Content-Type": "application/json"};
-       await axios.get(`http://localhost/ssm/api/Sequence.php`, headers)
+       await axios.get(`http://192.168.100.7/ssm/api/Sequence.php`, headers)
         .then(response=>{
             setClSeq(response.data);
         },[])
@@ -65,7 +65,7 @@ export default function NoteAdmin() {
         //setmatStudent(trial) 
             if(trial !== ''){ 
                 console.log(trial);
-                axios.get(`http://localhost/ssm/api/ajoutScheduleSub.php/${trial}`, headers)
+                axios.get(`http://192.168.100.7/ssm/api/ajoutScheduleSub.php/${trial}`, headers)
                 .then(response=>{
                     console.log(response.data);
                     setMatiereData(response.data);
@@ -81,8 +81,8 @@ export default function NoteAdmin() {
             console.log(subject)
             var headers = {"Accept":"application/json",
             "Content-Type": "application/json"};
-            console.log(`http://localhost/ssm/api/ViewNote.php/${subject}/${seq}`);
-            axios.get(`http://localhost/ssm/api/ViewNote.php/${subject}/${seq}`, headers)
+            console.log(`http://192.168.100.7/ssm/api/ViewNote.php/${subject}/${seq}`);
+            axios.get(`http://192.168.100.7/ssm/api/ViewNote.php/${subject}/${seq}`, headers)
             .then(response=>{
                 setNoteEleve(response.data);
                 console.log(response.data);

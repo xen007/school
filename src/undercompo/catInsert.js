@@ -2,6 +2,7 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import config from '../component/config';
 // fonction principale
 export default function CatInsert(){
     // declaration des contantes
@@ -35,7 +36,7 @@ export default function CatInsert(){
             tr3:formvalue.tr3,
             des:formvalue.des,
         }
-        const res = await axios.post('http://localhost/ssm/api/categCl.php', formData)
+        const res = await axios.post(`${config.apiBaseUrl}/categCl.php`, formData)
         if(res.data.success){
             setMessage(res.data.success)
             setTimeout(() => {

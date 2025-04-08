@@ -5,6 +5,7 @@ import { PencilSquare } from "react-bootstrap-icons";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { useNavigate } from "react-router-dom";
+import config from '../component/config';
 
 // fonction prinncipale
 export default function LevEdit({data}) {
@@ -25,7 +26,7 @@ const handleSubmit =async(e)=>{
       idNi:id,
       lib_niv: lev.toUpperCase()
   }
-  const res = await axios.put('http://localhost/ssm/api/niveau.php', formData)
+  const res = await axios.put(`${config.apiBaseUrl}/niveau.php`, formData)
   if(res.data.success){
       // setMessage(res.data.success)
       alert('modifié')

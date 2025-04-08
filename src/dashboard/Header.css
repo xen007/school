@@ -1,0 +1,10 @@
+
+.dropdown-menu {
+    position: absolute;
+    right: 0;
+    top: 100%;
+  
+    border-radius: 5px;
+    padding: 10px 0;
+  }
+  

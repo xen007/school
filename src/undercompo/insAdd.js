@@ -5,6 +5,7 @@ import { CurrencyExchange } from "react-bootstrap-icons";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { useNavigate } from "react-router-dom";
+import config from '../component/config';
 // fonction  principale
 export default function InsAdd({data}) {
   // déclaration des constantes
@@ -42,7 +43,7 @@ const handleSubmit =async(e)=>{
       ins:ins
       // solde: val.solde
   }
-  const res = await axios.post('http://localhost/ssm/api/ins.php', formData)
+  const res = await axios.post(`${config.apiBaseUrl}/ins.php`, formData)
   if(res.data.success){
       // setMessage(res.data.success)
       alert('Inscrit avec succès')

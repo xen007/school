@@ -2,6 +2,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import config from '../component/config';
 //fonction principale
 export default function CatEdit(){
     // déclaration des constantes
@@ -25,7 +26,7 @@ export default function CatEdit(){
     //fonction de récupération des in formations de la classe
     useEffect( () => {
         const getCateg = async()=>{
-        const reqdata = await fetch("http://localhost/ssm/api/categCl.php/"+id)
+        const reqdata = await fetch(`${config.apiBaseUrl}/categCl.php/`+id)
         const resdata = await reqdata.json()
         console.log(resdata)
         setFormvalue(resdata)
@@ -50,7 +51,7 @@ export default function CatEdit(){
             tr3:formvalue.tr3,
             des:formvalue.des,
         }
-        const res = await axios.put('http://localhost/ssm/api/categCl.php', formData)
+        const res = await axios.put(`${config.apiBaseUrl}/categCl.php`, formData)
         if(res.data.success){
             setMessage(res.data.success)
             setTimeout(() => {

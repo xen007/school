@@ -1,41 +1,49 @@
-
-// importation des modules
+// Importation des modules
 import axios from "axios";
-import React, {useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { CashCoin, PrinterFill } from "react-bootstrap-icons";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import ReactPrint from 'react-to-print'
-// fonction  principale
+import ReactPrint from 'react-to-print';
+import config from '../component/config';
 
-export default function PdfTemplate({data,props}) {
-  // déclaration des constantes
+// Fonction principale
+export default function PdfTemplate({ data, props }) {
+  // Déclaration des constantes
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const [Dates, setDates] = useState('');
-  const ref = useRef ();
-  const id= data.id
-  const mat= data.matricule
-  const nom =data.nom
-  const prenom =data.prenom
-  const classe =data.classe
-  const montant =data.montant
-  const reste =data.reste
-  const motif =data.motif
+  const [ecData, setecData] = useState([]);
 
-// prise en charge des information saisies
-useEffect(() => {
+  const ref = useRef();
+  const id = data.id;
+  const mat = data.matricule;
+  const nom = data.nom;
+  const prenom = data.prenom;
+  const classe = data.classe;
+  const montant = data.montant;
+  const reste = data.reste;
+  const motif = data.motif;
 
-  const current = new Date();
-  const date = `${current.getDate()}/${current.getMonth() + 1}/${current.getFullYear()}`;
-  setDates(date)
+  // Prise en charge des informations saisies
+  useEffect(() => {
+    const current = new Date();
+    const date = `${current.getDate()}/${current.getMonth() + 1}/${current.getFullYear()}`;
+    setDates(date);
 
-},[])
+    const getecole = async () => {
+      const reqdata = await fetch(`${config.apiBaseUrl}/schoolUp.php/` + 1);
+      const resdata = await reqdata.json();
+      setecData(resdata);
+    };
+    getecole();
+  }, []);
+
   return (
     <>
       <Button variant="light" onClick={handleShow}>
-      <PrinterFill/>
+        <PrinterFill />
       </Button>
 
       <Modal
@@ -45,85 +53,64 @@ useEffect(() => {
         keyboard={false}
       >
         <Modal.Body>
-        < main className='main-container'>
-                <div className="container" ref={ref} >
-            {/* <div className=" col-md-10 text-center">
-                <h2 style={{ color: '#325aa8' }} >INVOICE</h2>
-                <h5> Id: {props.InvoiceNumber}</h5>
-            </div>  */}
-        <div className="col-xs-12">
-            <div className="col-md-12">
-            <div className="row">
-                <div className="col-xs-7 col-sm-7 col-md-7">
-                        <strong>SAINT MARTIN'S COMPREHENSIVE COLLEGE OF STANDARDS BERTOUA</strong>
-                        <br/>
-                        P.O. BOX 350 BERTOUA
-                        <br/>
-                        <abbr title="Phone">P:</abbr> (+237) 699-999-999
+          <main className='main-container'>
+            <div className="container card-container" ref={ref} style={{ width: '100%' }}>
+              <div className="row">
+                <div className="col-12 col-sm-7 col-md-5">
+                  <p id='tiEcol'><strong>{ecData.nomec}</strong></p>
+                  <p>{ecData.bp}</p>
+                  <p>{ecData.contact}</p>
                 </div>
-                <div className="col-xs-5 col-sm-5 col-md-5 text-end">
-                    <p>
-                        <em><b>Date :</b> {Dates}</em>
-                    </p>
-                    <p>
-                        <em>Receipt #: {id}</em>
-                    </p>
+                <div className="col-12 col-sm-5 col-md-2">
+                  <img src={`${config.apiBaseUrl}/logo/${ecData.logo}`} style={{ width: "80px" }} alt="Logo" />
                 </div>
-                
+                <div className="col-12 col-md-5 text-md-end">
+                  <p>
+                    <em><b>Date :</b> {Dates}</em>
+                  </p>
+                  <p>
+                    <em>Receipt #: {id}</em>
+                  </p>
+                </div>
+              </div>
+              <br />
+              <div className="form-horizontal">
+                <legend>Reçu de paiement</legend>
+                <div className='row'>
+                  <div className="form-group col-md-8 mb-3">
+                    <label htmlFor="recipient-name">Reçu de M/Mlle</label>
+                    <input type="text" value={nom + ' ' + prenom} className="form-control" readOnly />
+                  </div>
+                  <div className="form-group col-md-4 mb-3">
+                    <label htmlFor="matricule">Matricule</label>
+                    <input type="text" value={mat} className="form-control" readOnly />
+                  </div>
+                </div>
+                <div className='row'>
+                  <div className="form-group col-md-6 mb-3">
+                    <label htmlFor="classe">Classe</label>
+                    <input type="text" value={classe} className="form-control" readOnly />
+                  </div>
+                  <div className="form-group col-md-6 mb-3">
+                    <label htmlFor="amount">La somme de</label>
+                    <input type="text" value={montant + ' FCFA'} className="form-control" readOnly />
+                  </div>
+                </div>
+                <div className='row'>
+                  <div className="form-group col-md-8 mb-3">
+                    <label htmlFor="motif">Motif</label>
+                    <input type="text" value={motif} className="form-control" readOnly />
+                  </div>
+                  <div className="form-group col-md-4 mb-3">
+                    <label htmlFor="remaining">Reste à payer</label>
+                    <input type="text" value={reste + ' FCFA'} className="form-control" readOnly />
+                  </div>
+                  <p className="text-end"><strong>La Directrice</strong></p>
+                </div>
+              </div>
+              <ReactPrint trigger={() => <button className="btn btn-primary mt-3">Imprimer</button>} content={() => ref.current} />
             </div>
-                 <br/>
-                <div className="form-horizontal">
-                          <legend>Reçu de paiement</legend>
-                          <div className='row '>
-                            <div className="form-group col-md-8 col-sm-8">
-                                <label for="card-number">Reçu de M/Mlle</label>
-                                <div>
-                                <input type="text" value={nom +' '+prenom} className="form-control" readOnly />
-                                </div>
-                            </div>
-                            <div className="col-md-4 col-sm-4">
-                                <label for="card-number">Matricule</label>
-                                <div >
-                                <input type="text" value={mat} className="form-control" readOnly />
-                                </div>
-                            </div>
-                            </div>
-                          <div className='row '>
-                            <div className="form-group col-md-6 col-sm-6" >
-                                <label for="card-number">Classe</label>
-                                <div className="">
-                                <input type="text" value={classe} className="form-control" readOnly />
-                                </div>
-                            </div>
-                            <div className="col-md-6 col-sm-6">
-                                <label for="card-number">La somme de</label>
-                                <div className="co">
-                                <input type="text" value={montant + 'FCFA'} className="form-control" readOnly />
-                                </div>
-                            </div>
-                          </div>
-                          <div className='row '>
-                            <div className="form-group col-md-8 col-sm-8">
-                                <label for="card-number">Motif</label>
-                                <div>
-                                <input type="text" value={motif} className="form-control" readOnly />
-                                </div>
-                            </div>
-                            <div className="col-md-4 col-sm-4">
-                                <label for="card-number">Reste à payer</label>
-                                <div >
-                                <input type="text" value={reste + 'FCFA'} className="form-control" readOnly />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-            <ReactPrint trigger={() => <button>Imprimer</button>} content={() => ref.current}  />
-            
-        </main>
-
+          </main>
         </Modal.Body>
         <Modal.Footer>
           <button onClick={handleClose} className="btn btn-secondary">
@@ -134,4 +121,3 @@ useEffect(() => {
     </>
   );
 }
-

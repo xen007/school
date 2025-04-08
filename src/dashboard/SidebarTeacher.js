@@ -7,11 +7,8 @@ import
  import { FaMoneyCheck } from "react-icons/fa";
  import { FaCalendarPlus } from "react-icons/fa";
 import { Link } from 'react-router-dom';
-import AuthContext from '../context/AuthProvider.js';
 
 function SidebarTeacher() {
-    const {auth} = useContext(AuthContext);
-    const {authteacher} = useContext(AuthContext);
     const [openSidebarToggle, setOpenSidebarToggle] = useState(false);
     const OpenSidebar = () => {
     setOpenSidebarToggle(!openSidebarToggle);

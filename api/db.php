@@ -7,7 +7,7 @@ header("Access-Control-Allow-Headers: *");
 header("Access-Control-Allow-Methods: *");
 
 //connexion à la base de données
-$db_connect = mysqli_connect("localhost" ,"root","", "monou");
+$db_connect = mysqli_connect("localhost" ,"root","", "char");
 if($db_connect === false){
     die("Error: could not connect".mysqli_connect_error());
 }

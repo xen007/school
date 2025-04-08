@@ -67,18 +67,28 @@ require('db.php');
             }break;
 
 
-        case 'POST':
-            $userpostdata = json_decode(file_get_contents("php://input"));
-            $iduser = $userpostdata->mat;
-            $montant = $userpostdata->montant;
             
-            $sco = $userpostdata->sco;
-            $req= mysqli_query($db_connect,"INSERT INTO scolarite (matricule_El,montant,datePaye) VALUES ('$iduser','$montant',NOW() )");
             
-            if($req){
-                echo json_encode(["success"=>"incription effectuée"]);
-                return;
-            }else echo json_encode(['success'=>'Verifiez les informations SVP']); return;
-       
+case 'POST':
+    $userpostdata = json_decode(file_get_contents("php://input"));
+    $iduser = $userpostdata->mat;
+    $montant = $userpostdata->montant;
+    $sco = $userpostdata->sco;
+    $code = $userpostdata->code;
 
+    $req = mysqli_query($db_connect, "SELECT * FROM scolarite WHERE code_versement = '$code' AND code_versement != '' ");
+    
+    if (mysqli_num_rows($req) > 0) {
+        echo json_encode(['success' => false, 'message' => 'Le code de versement existe déjà']);
+    } else {
+        $req = mysqli_query($db_connect, "INSERT INTO scolarite (matricule_El, montant, code_versement, datePaye) VALUES ('$iduser', '$montant', '$code', NOW())");
+        
+        if ($req) {
+            echo json_encode(['success' => true, 'message' => 'Inscription effectuée']);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Vérifiez les informations SVP']);
+        }
     }
+    break;
+
+  }

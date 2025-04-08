@@ -1,0 +1,115 @@
+/* Registration.css */
+.registration-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.registration-popup-content {
+  background: #f9f9f9;
+  padding: 30px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 400px;
+  box-sizing: border-box;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  animation: fadeIn 0.5s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.registration-form label {
+  display: block;
+  margin-bottom: 15px;
+  font-weight: bold;
+  color: #333;
+}
+
+.registration-form input,
+.registration-form select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.registration-form input:focus {
+  border-color: #80bdff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(128, 189, 255, 0.5);
+}
+
+.password-strength {
+  display: block;
+  margin-top: 5px;
+}
+
+.password-strength.weak {
+  color: red;
+}
+
+.password-strength.strong {
+  color: green;
+}
+
+.password-error {
+  color: red;
+}
+
+.registration-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.registration-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.registration-button-submit {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.registration-button-submit:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.registration-button-close {
+  background-color: #f44336;
+  color: white;
+}
+
+.registration-button:hover {
+  opacity: 0.9;
+}
+
+@media (min-width: 600px) {
+  .registration-popup-content {
+    width: 70%;
+    max-width: 600px;
+  }
+}
+
+@media (min-width: 768px) {
+  .registration-popup-content {
+    width: 50%;
+    max-width: 700px;
+  }
+}

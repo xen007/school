@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import '../style/modificationNote.css';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
+import config from '../component/config';
 
 
 export default function Modensei(){
@@ -34,7 +35,7 @@ export default function Modensei(){
     function tabEnseig(){ // function permettant la récupération des données de la bd et la mise à jour des constances 
         var headers = {"Accept":"application/json",
             "Content-Type": "application/json"};
-    axios.get(`http://localhost/ssm/api/view.php/${matricule}`, headers)
+    axios.get(`${config.apiBaseUrl}/view.php/${matricule}`, headers)
     .then(response=>{
        
         console.log(response.data)
@@ -75,7 +76,7 @@ export default function Modensei(){
         formData.append('tel',tel)
         formData.append('cv', cv)
         console.log(formData)
-        axios.post('http://localhost/ssm/api/mod.php',formData,{
+        axios.post(`${config.apiBaseUrl}/mod.php`,formData,{
             headers:{"Content-Type": "multipart/form-data"}
            
         }).then(response=>{

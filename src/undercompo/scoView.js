@@ -5,6 +5,7 @@ import Modal from 'react-bootstrap/Modal';
 import './stview.css'
 import { Eye } from "react-bootstrap-icons";
 import PdfTemplate from "./Template";
+import config from '../component/config';
 // fonction principale
 export default function ScoView({data}) {
   // déclaration des constantes
@@ -17,7 +18,7 @@ const[scoData,setScoData]= useState([])
 useEffect( ()=>{
   // récupération des informations de la classe
   const getSco= async()=>{
-    const reqdata = await fetch("http://localhost/ssm/api/sco.php/"+id)
+    const reqdata = await fetch(`${config.apiBaseUrl}/sco.php/`+id)
     const resdata = await reqdata.json()
     // console.log(resdata)
       setScoData(resdata)

@@ -1,14 +1,12 @@
 import React, {useState, useEffect, useContext} from 'react';
 import axios from 'axios';
-import AuthContext from '../context/AuthProvider';
 import '../style/modificationNote.css';
 // import Enseignant from '../components/Enseignant';
 import { useNavigate, useParams } from 'react-router-dom';
 import Popup2 from '../popup/Popup';
+import config from '../component/config';
 
 export default function ModificationNote() {
-const {auth} = useContext(AuthContext);
-const {authteacher} = useContext(AuthContext);
   const[matriculeEleve, setMatriculeEleve] = useState('');
   const[noteEleve, setnoteEleve] = useState("");
   const[Matricule, setMatricule] = useState("");
@@ -17,9 +15,7 @@ const {authteacher} = useContext(AuthContext);
   const[OpenpopUp, setOpenPopup] = useState(true);
   const navigate = useNavigate();
   const {matricule_El, seq_elev, matiere} = useParams();
-  if(auth){
-    
-  }
+
   console.log(matricule_El);
   console.log(seq_elev);
   console.log(matiere);
@@ -28,7 +24,7 @@ const {authteacher} = useContext(AuthContext);
     //e.preventDefault();
     var headers = {"Accept":"application/json",
         "Content-Type": "application/json"};
-       await axios.get(`http://localhost/ssm/api/getStudent.php/${matricule_El}/${matiere}/${seq_elev}`, headers)
+       await axios.get(`${config.apiBaseUrl}/getStudent.php/${matricule_El}/${matiere}/${seq_elev}`, headers)
         .then(response=>{ 
           console.log(response.data);
           console.log(response.data.nom);
@@ -50,18 +46,10 @@ const {authteacher} = useContext(AuthContext);
     }
     console.log(formData);
     //window.location.reload();
-    axios.post(`http://localhost/ssm/api/NoteModifier.php/${matricule_El}/${seq_elev}/${matiere}`,formData,{
+    axios.post(`${config.apiBaseUrl}/NoteModifier.php/${matricule_El}/${seq_elev}/${matiere}`,formData,{
         headers:{"Content-Type": "multipart/form-data"},
     })
-    if(authteacher ){
-      navigate(`/home`)
-    }
-    else if(auth){
-      navigate('/Home')
-    }
-    else{
-
-    }
+    
   }
   return (
             <div className="col-md-6">

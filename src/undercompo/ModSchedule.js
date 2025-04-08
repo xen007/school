@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
+import config from '../component/config';
 
 
 // la partie set... permet de mettre à jour nos constance
@@ -34,7 +35,7 @@ export default function ModSchedule() {
  function view(e){
   var headers = {"Accept":"application/json",
 "Content-Type": "application/json"};
-axios.get(`http://localhost/toungou-sch/api/modSchedule.php/${cours}`, headers)
+axios.get(`${config.apiBaseUrl}/modSchedule.php/${cours}`, headers)
 .then(response=>{
   const control = response.data.id_classe;
   const con = response.data.matriculeEnseignant;
@@ -70,7 +71,7 @@ function AddSUb(id_mat, mat){
   //e.preventDefault();
   var headers = {"Accept":"application/json",
       "Content-Type": "application/json"}; // entête donnant les droit au script d'effectuer des modifications
-  axios.get(`http://localhost/toungou-sch/api/modifyScheduleSub.php/${id_mat}/${mat}`, headers) //api pour liant le script à une page php avec la method get
+  axios.get(`http://192.168.100.7/toungou-sch/api/modifyScheduleSub.php/${id_mat}/${mat}`, headers) //api pour liant le script à une page php avec la method get
   .then(response=>{
       setMatiereData(response.data);
       console.log(response.data)
@@ -84,7 +85,7 @@ function AddSUb(id_mat, mat){
       var headers = {"Accept":"application/json",
           "Content-Type": "application/json"};
   
-  axios.get(`http://localhost/toungou-sch/api/ajoutScheduleClass.php`, headers)
+  axios.get(`http://192.168.100.7/toungou-sch/api/ajoutScheduleClass.php`, headers)
   .then(response=>{
       setClData(response.data);
       console.log(response.data);
@@ -95,7 +96,7 @@ function AddSUb(id_mat, mat){
   function AddSalle(classe_id){
     var headers = {"Accept":"application/json",
         "Content-Type": "application/json"};
-  axios.get(`http://localhost/toungou-sch/api/ajoutScheduleSalle.php/${classe_id}`, headers)
+  axios.get(`http://192.168.100.7/toungou-sch/api/ajoutScheduleSalle.php/${classe_id}`, headers)
   .then(response=>{
     setNiveauData(response.data);
     console.log(response.data);
@@ -104,8 +105,8 @@ function AddSUb(id_mat, mat){
   function AddEns(day){
     var headers = {"Accept":"application/json",
         "Content-Type": "application/json"};
-  console.log(`http://localhost/toungou-sch/api/ajoutScheduleEns.php/${Matiere}/${day}`)      
-axios.get(`http://localhost/toungou-sch/api/ajoutScheduleEns.php/${Matiere}/${day}`, headers)
+  console.log(`http://192.168.100.7/toungou-sch/api/ajoutScheduleEns.php/${Matiere}/${day}`)      
+axios.get(`http://192.168.100.7/toungou-sch/api/ajoutScheduleEns.php/${Matiere}/${day}`, headers)
 .then(response=>{
     // console.log(response.data);
     setEnseigData(response.data);
@@ -119,7 +120,7 @@ axios.get(`http://localhost/toungou-sch/api/ajoutScheduleEns.php/${Matiere}/${da
       //e.preventDefault();
       var headers = {"Accept":"application/json",
               "Content-Type": "application/json"};
-      axios.get(`http://localhost/toungou-sch/api/modifyDay.php/${con}`, headers)
+      axios.get(`http://192.168.100.7/toungou-sch/api/modifyDay.php/${con}`, headers)
   .then(response=>{
       console.log(response.data);
       setJourData(response.data);
@@ -175,7 +176,7 @@ const handleEnsei= async(e) =>{
         formData.append('fdc', fdc);
         formData.append('jour', jour);
       
-      axios.post(`http://localhost/toungou-sch/api/UpdateSchedule.php/${cours}`,formData,{
+      axios.post(`http://192.168.100.7/toungou-sch/api/UpdateSchedule.php/${cours}`,formData,{
            headers:{"Accept":"application/json","Content-Type": "application/json"},
         })
         .then(response=>{

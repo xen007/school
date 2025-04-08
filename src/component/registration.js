@@ -72,7 +72,7 @@ if(toggle === true){
     headers: headers}
 
 
-    axios.post('http://localhost/files/login.php', donnee) 
+    axios.post('http://192.168.100.7/files/login.php', donnee) 
     .then(response=>{
     //setMsg(response.data.status);
     console.log(response.data.status);
@@ -100,7 +100,7 @@ else{
     headers: headers}
 
 
-    axios.post('http://localhost/files/login.php', donnee) 
+    axios.post('http://192.168.100.7/files/login.php', donnee) 
     .then(response=>{
     console.log(response.data.status);
     if ( response.data.status === 'successfully recorder, redirecting to a new page') {

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {faChildDress, faUser, faChild, faList, faBuildingColumns, faChalkboardTeacher } from '@fortawesome/free-solid-svg-icons'
 import axios from "axios"
+import config from '../component/config';
+import { Link } from 'react-router-dom';
 function Home() {
     const[classe,setClData]=useState([])
     const[studentData, setStudentData] = useState([])
@@ -10,20 +12,20 @@ function Home() {
 
     useEffect( ()=>{
         const getclasse= async()=>{
-            const reqdata = await fetch("http://localhost/ssm/api/classe.php")
+            const reqdata = await fetch(`${config.apiBaseUrl}/classe.php`)
             const resdata = await reqdata.json()
             setClData(resdata)
             }
           getclasse()
           const getStudentData = async() =>{
-            const requestData = await fetch("http://localhost/ssm/api/l.php")
+            const requestData = await fetch(`${config.apiBaseUrl}/l.php`)
             const responseData = await requestData.json()
             setStudentData(responseData)
         }
         getStudentData()
 
         const getSubject= async()=>{
-            const reqdata = await fetch("http://localhost/ssm/api/mat.php")
+            const reqdata = await fetch(`${config.apiBaseUrl}/mat.php`)
             const resdata = await reqdata.json()
             setSubData(resdata)
             }
@@ -31,7 +33,7 @@ function Home() {
             function tabEnseig(){ // function pour la récupération des données dans la bd
                 var headers = {"Accept":"application/json",
                     "Content-Type": "application/json"};
-            axios .get(`http://localhost/ssm/api/tabenseig.php`, headers)
+            axios .get(`${config.apiBaseUrl}/tabenseig.php`, headers)
             .then(response=>{ //mise à jour des constances déclaré
                 setEnseig(response.data);
             })
@@ -140,7 +142,9 @@ if ((studentData.resultat ===  'Verifiez les informations SVP'  && classe.result
     
     
             <div className="row mb-3">
+            
                 <div className="col-xl-3 col-sm-6 py-2">
+                <Link to='/students' style={{textDecoration:'none'}}>
                     <div className="card bg-success text-white h-100">
                         <div className="card-body bg-success" >
                             <div className="rotate">
@@ -151,9 +155,11 @@ if ((studentData.resultat ===  'Verifiez les informations SVP'  && classe.result
                             <h1 className="display-4">{nelv}</h1>
                         </div>
                     </div>
+                    </Link>
                 </div>
                 <div className="col-xl-3 col-sm-6 py-2">
-                    <div className="card text-white bg-secondary h-100">
+                <div className="card text-white bg-secondary h-100">
+
                         <div className="card-body bg-secondary">
                             <div className="rotate">
                                 <i className="fa-solid fa-child-dress fa-4x"> </i>
@@ -163,8 +169,10 @@ if ((studentData.resultat ===  'Verifiez les informations SVP'  && classe.result
                             <h1 className="display-4">{nf}</h1>
                         </div>
                     </div>
+                
                 </div>
                 <div className="col-xl-3 col-sm-6 py-2">
+                
                     <div className="card text-white bg-primary h-100">
                         <div className="card-body bg-primary">
                             <div className="rotate">
@@ -177,6 +185,7 @@ if ((studentData.resultat ===  'Verifiez les informations SVP'  && classe.result
                     </div>
                 </div>
                 <div className="col-xl-3 col-sm-6 py-2">
+                <Link to ='/subjects' style={{textDecoration:'none'}}>
                     <div className="card text-white bg-danger h-100">
                         <div className="card-body">
                             <div className="rotate">
@@ -187,8 +196,10 @@ if ((studentData.resultat ===  'Verifiez les informations SVP'  && classe.result
                             <h1 className="display-4">{nmat}</h1>
                         </div>
                     </div>
+                    </Link>
                 </div>
                 <div className="col-xl-3 col-sm-6 py-2">
+                <Link to='/classes' style={{textDecoration:'none'}}>
                     <div className="card text-white bg-warning h-100">
                         <div className="card-body">
                             <div className="rotate">
@@ -199,9 +210,11 @@ if ((studentData.resultat ===  'Verifiez les informations SVP'  && classe.result
                             <h1 className="display-4">{ncla}</h1>
                         </div>
                     </div>
+                    </Link>
                 </div>
                 
                 <div className="col-xl-3 col-sm-6 py-2">
+                <Link to='/teachers' style={{textDecoration:'none'}} >
                     <div className="card text-white bg-info h-100">
                         <div className="card-body">
                             <div className="rotate">
@@ -213,6 +226,7 @@ if ((studentData.resultat ===  'Verifiez les informations SVP'  && classe.result
                   
                         </div>
                     </div>
+                    </Link>
                 </div>
             </div>
         </main>

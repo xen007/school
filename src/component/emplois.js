@@ -8,7 +8,7 @@ import ModSchedule from '../undercompo/ModSchedule';
 import {Link} from 'react-router-dom';
 import Popup2 from '../popup/Popup2';
 import { Plus } from 'react-bootstrap-icons';
-
+import config from './config';
 //fonction principale
 export default function Schedule() {
   // déclaration des constantes
@@ -28,7 +28,7 @@ export default function Schedule() {
   /*const getSalle = async()=>{
     var headers = {"Accept":"application/json",
               "Content-Type": "application/json"};
-     await axios("http://localhost/files/ajoutScheduleSalle.php", headers)
+     await axios("http://192.168.100.7/files/ajoutScheduleSalle.php", headers)
     .then(response=>{
       setNiveauData(response.data);})
       
@@ -47,7 +47,7 @@ useEffect(()=>{
       console.log('bonjour')
       var headers = {"Accept":"application/json",
               "Content-Type": "application/json"};
-      await axios("http://localhost/ssm/api/ajoutScheduleClass.php", headers)
+      await axios(`${config.apiBaseUrl}/ajoutScheduleClass.php`, headers)
       .then(response=>{
         setClData(response.data);}
         )};
@@ -57,7 +57,7 @@ useEffect(()=>{
     //e.preventDefault();
     var headers = {"Accept":"application/json",
         "Content-Type": "application/json"};
-axios.get(`http://localhost/files/viewSchedule.php`, headers)
+axios.get(`http://192.168.100.7/files/viewSchedule.php`, headers)
 .then(response=>{
     console.log(response.data);
     setClasse(response.data);}
@@ -72,7 +72,7 @@ console.log(niveauID)
         "Content-Type": "application/json"};
         if(niveauID !== ''){
           setDisabled(false);
-axios.get(`http://localhost/ssm/api/viewClasse.php/${niveauID}`, headers)
+axios.get(`${config.apiBaseUrl}/viewClasse.php/${niveauID}`, headers)
 .then(response=>{
     console.log(response.data);
     setClDa(response.data);
@@ -89,7 +89,7 @@ function handleData (e){
   var headers = {"Accept":"application/json",
   "Content-Type": "application/json"};
   if(disabled !== true){
-  axios.get(`http://localhost/ssm/api/viewSchedule.php/${classId}`, headers)
+  axios.get(`${config.apiBaseUrl}/viewSchedule.php/${classId}`, headers)
   .then(response=>{
     console.log()
     setBDData(response.data)
@@ -105,7 +105,7 @@ const handleDelete = (id_cours)=>{
         
   const conf = window.confirm('Voulez-vous vraiment supprimé ce programme ?');
   if (conf) {
-      axios.delete(`http://localhost/ssm/api/deleteCours.php/${id_cours}`).then(function(response){
+      axios.delete(`${config.apiBaseUrl}/deleteCours.php/${id_cours}`).then(function(response){
           console.log(response.data);
       })
       getClasse();

@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom';
 import Bullt from '../component/bullt';
 import { PrinterFill } from 'react-bootstrap-icons';
 import { format } from "date-fns";
+import config from '../component/config';
 
 export default function Notes(){//creation de la fonction principaae
     //declaration de la variable pour stocker les notes
@@ -13,7 +14,7 @@ export default function Notes(){//creation de la fonction principaae
     const {nt} = useParams()
     useEffect( ()=> {
     const getnoData = async() =>{
-        const requestData = await fetch("http://localhost/ssm/api/trim.php/?" + new URLSearchParams({
+        const requestData = await fetch(`${config.apiBaseUrl}/trim.php/?` + new URLSearchParams({
             nt: nt,
         }).toString())
         // recupération du résultat
@@ -36,7 +37,7 @@ export default function Notes(){//creation de la fonction principaae
     // fonction pour recuperer les niveaux
       useEffect( () => {
         const getNiveau = async()=>{
-            const reqdata = await fetch("http://localhost/ssm/api/niveau.php")
+            const reqdata = await fetch(`${config.apiBaseUrl}/niveau.php`)
             const resdata = await reqdata.json()
             // console.log(resdata)
             setNiveauData(resdata)
@@ -44,7 +45,7 @@ export default function Notes(){//creation de la fonction principaae
         getNiveau()
         // fontion pour recuperer les classes
         const getclasse= async()=>{
-            const reqdata = await fetch("http://localhost/ssm/api/classe.php")
+            const reqdata = await fetch(`${config.apiBaseUrl}/classe.php`)
             const resdata = await reqdata.json()
             setClData(resdata)
         }
@@ -55,7 +56,7 @@ export default function Notes(){//creation de la fonction principaae
       const id = nt
       useEffect( ()=>{ 
         const getdate= async()=>{
-            const reqdata = await fetch("http://localhost/ssm/api/dates.php/?" + new URLSearchParams({
+            const reqdata = await fetch(`${config.apiBaseUrl}/dates.php/?` + new URLSearchParams({
                 id:id,
                 tab : data
             }).toString())

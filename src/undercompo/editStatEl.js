@@ -4,6 +4,7 @@ import React, {useState } from "react";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { useNavigate } from "react-router-dom";
+import config from '../component/config';
 
 export default function EditStatEl({data}) {
   const [show, setShow] = useState(false);
@@ -26,7 +27,7 @@ const handleSubmit =async(e)=>{
       idNi:id,
       lib_niv: Stat.toUpperCase()
   }
-  const res = await axios.put('http://localhost/ssm/api/niv.php', formData)
+  const res = await axios.put(`${config.apiBaseUrl}/niv.php`, formData)
   if(res.data.success){
       // setMessage(res.data.success)
       alert('modifié')

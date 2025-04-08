@@ -15,7 +15,7 @@ switch($method){
                     if(mysqli_num_rows($alluser) > 0){
                         //vérifie si les informations sont disponibles et les récupères
                         while($row = mysqli_fetch_array($alluser)){
-                            $json_array["ecdata"] = array('id' =>$row['id_ecole'],'nomec'=>$row['nom_ecole'],'devise' =>$row['devise'], 'logo' =>$row['logo']); 
+                            $json_array["ecdata"] = array('id' =>$row['id_ecole'],'nomec'=>$row['nom_ecole'],'devise' =>$row['devise'], 'logo' =>$row['logo'],'bp'=>$row['bp'], 'contact' => $row['contact'],'adresse' => $row['adresse'],'responsable' => $row['responsable'] ); 
                         }
                         //affiche les informations récupérés
                         echo json_encode($json_array['ecdata']);
@@ -36,6 +36,9 @@ switch($method){
                     $userid = $_POST['id'];
                     $devise = $_POST['devise'];
                     $nomec = $_POST['nomec'];
+                    $bp = $_POST['bp'];
+                    $contact = $_POST['contact'];
+                    $adresse = $_POST['adresse'];
                     
                   
                     // Check if a logo file is uploaded
@@ -47,14 +50,14 @@ switch($method){
                         // Move uploaded file to the destination
                         if (move_uploaded_file($logo_temp, $dest)) {
                             // Update query with the logo
-                            $updatedata = mysqli_query($db_connect, "UPDATE ecole SET nom_ecole = '$nomec', devise = '$devise', logo = '$logo' WHERE id_ecole='$userid'");
+                            $updatedata = mysqli_query($db_connect, "UPDATE ecole SET nom_ecole = '$nomec', devise = '$devise', logo = '$logo', bp = '$bp', contact = '$contact', adresse= '$adresse' WHERE id_ecole='$userid'");
                         } else {
                             echo json_encode(['success' => 'Échec du téléchargement du logo. Veuillez réessayer.']);
                             return;
                         }
                     } else {
                         // Update query without the logo
-                        $updatedata = mysqli_query($db_connect, "UPDATE ecole SET nom_ecole = '$nomec', devise = '$devise' WHERE id_ecole='$userid'");
+                        $updatedata = mysqli_query($db_connect, "UPDATE ecole SET nom_ecole = '$nomec', devise = '$devise', bp = '$bp', contact = '$contact', adresse= '$adresse' WHERE id_ecole='$userid'");
                     }
                
                 if ($updatedata) {

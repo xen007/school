@@ -6,6 +6,8 @@ import {Link, useNavigate} from 'react-router-dom'
 import InsAdd from '../undercompo/insAdd'
 import { FaCheck } from 'react-icons/fa'
 import ReactToPrint from "react-to-print";
+import config from './config';
+import IDCards from './IDCards'
 export default function StudentList(){ //declaration de la fonction principale
     // declaration de la  constante pour naviguuer entre les pages
     const navigate = useNavigate()
@@ -14,19 +16,20 @@ export default function StudentList(){ //declaration de la fonction principale
     const[ins, setInsData] = useState([])
     const[record,setRecord] = useState([])
     const[ecData,setecData]=useState([])
+    const [displayActive, setDisplayActive] = useState(true); // State to track which students to display
     useEffect( ()=> {
         getStudentData()
     },[])
     const getStudentData = async() =>{
-        const requestData = await fetch("http://localhost/ssm/api/l.php")
+        const requestData = await fetch(`${config.apiBaseUrl}/l.php`)
         const responseData = await requestData.json()
         if(responseData.resultat !== 'Verifiez les informations SVP'){
             const result = responseData.sort((a,b) => a.nom.localeCompare(b.nom))
-            setRecord(result) 
+            setRecord(result.filter(s => s.stat !== '0')); // Filter to show only active students) 
             setStudentData(result)
             } 
     const getecole= async()=>{
-        const reqdata = await fetch("http://localhost/ssm/api/schoolUp.php/"+ 1)
+        const reqdata = await fetch(`${config.apiBaseUrl}/schoolUp.php/`+ 1)
         const resdata = await reqdata.json()
         setecData(resdata)
         }
@@ -38,24 +41,14 @@ export default function StudentList(){ //declaration de la fonction principale
         getInsData()
     },[])
     const getInsData =async()=>{
-        const req= await fetch("http://localhost/ssm/api/ins.php")
+        const req= await fetch(`${config.apiBaseUrl}/ins.php`)
         const res = await req.json()
         setInsData(res)
     }
         // fonction de suppression
   
-    const handleDelete = async(matricule) =>{
-        let isDel = window.confirm("Voulez-vous vraiment supprimer cet élève? Cette action est irreversible");
-        if(isDel){
-      const req= await axios.delete("http://localhost/ssm/api/l.php/"+matricule)
-      if(req.data.success){
-          alert(req.data.success)
-          setTimeout(() => {
-            getStudentData()
-        }, 500);
-      };
-    }
-    }
+  
+    // }
     //declaration des autrea contantes
     const[classe,setClData]=useState([])
     const[classData,setClassData] = useState([])
@@ -65,7 +58,7 @@ export default function StudentList(){ //declaration de la fonction principale
     // fonction de recuperation des niveaux
       useEffect( () => {
         const getNiveau = async()=>{
-            const reqdata = await fetch("http://localhost/ssm/api/niveau.php")
+            const reqdata = await fetch(`${config.apiBaseUrl}/niveau.php`)
             const resdata = await reqdata.json()
             // console.log(resdata)
             setNiveauData(resdata)
@@ -73,7 +66,7 @@ export default function StudentList(){ //declaration de la fonction principale
         getNiveau()
         // fonction de recuperation des classes
         const getclasse= async()=>{
-            const reqdata = await fetch("http://localhost/ssm/api/classe.php")
+            const reqdata = await fetch(`${config.apiBaseUrl}/classe.php`)
             const resdata = await reqdata.json()
             setClData(resdata)
         }
@@ -126,86 +119,93 @@ export default function StudentList(){ //declaration de la fonction principale
     const Tri = (e) =>{
         setRecord(studentData.filter(s => s.nom.toLowerCase().includes(e.target.value) || s.nom.toUpperCase().includes(e.target.value)))
     }
+    const handleDisplayActive = () => { setDisplayActive(true); setRecord(studentData.filter(s => s.stat !== '0')); }; 
+    const handleDisplayInactif = () => { setDisplayActive(false); setRecord(studentData.filter(s => s.stat === '0')); };
     // fonction pour avtiver et deactiver l'eleve
-    const HandleStat = async(stat,matricule) =>{  //parametres a prendre en compte
-        if(stat === '1'){ //statut 1 pour actif
-            var msg = prompt('motif obligatoire')
-            if(msg === ""){ //si le motif est vide annuler
-                alert('cancel')
-            }
-            else{ //sinon le statut passe a 0 et 
-                stat=0
-                alert('efectué')
-            }
-        }else{ //sil etait inactif il est actif desormais le statut passe a  1
-            stat=1
-            msg = ""
+    const HandleStat = async (stat, matricule) => {
+        if (stat === '1') { // Statut 1 pour actif
+          var msg = prompt('Motif obligatoire');
+          if (msg === null || msg.trim() === "") { // Si le motif est vide ou si l'utilisateur a annulé, annuler l'opération
+            alert('Annulé');
+            return; // Sortir de la fonction si annulé
+          } else { // Sinon, le statut passe à 0 et on affiche 'effectué'
+            stat = 0;
+            alert('Effectué');
+          }
+        } else { // Si l'élève était inactif, il devient actif (statut 1)
+          stat = 1;
+          msg = "";
         }
-        //recupere les informations pour mettre a jour la able
-            const formData = {
-                iduser:matricule,
-                stat:stat,
-                msg:msg
-            }
-            const res = await axios.put('http://localhost/ssm/api/niv.php', formData)
-            if(res.data.success){
-                setTimeout(() => {
-                    navigate('/students')
-                }, 2000);   
-            }
-            getStudentData()
-    }
-   
+      
+        // Récupérer les informations pour mettre à jour la table
+        const formData = {
+          iduser: matricule,
+          stat: stat,
+          msg: msg
+        };
+        
+        try {
+          const res = await axios.put(`${config.apiBaseUrl}/niv.php`, formData);
+          if (res.data.success) {
+            setTimeout(() => {
+              navigate('/students');
+            }, 2000);
+            getStudentData(); // Mettre à jour la liste des étudiants après le changement de statut
+          }
+        } catch (error) {
+          console.error('Error updating status:', error);
+        }
+      };
+      
 
     return(
         <main className='main-container'>
             <h3>Bienvenu sur la gestion des Elèves</h3>
-            <div className="col-sm-12">
+            
           
-            <div className="row mb-3">
-                <div className="form-group col-md-4">
-                <label className="mb-2">Niveau</label>
-                <select name="niveau" className="form-control" onChange={(e)=>handleNiveau(e)}>
-                <option value="">Selectionnez le Niveau</option>
-                    {
-                    niveauData.map((nData, index) =>(
-                    <option key={index}  value={nData.id}>{nData.libellee_niveau}</option>
-                        )
-                    )}
-                </select>
-              </div>
-              <div className="form-group col-md-4">
-              <label className="mb-2">Classe</label>
-              <select name="classe" disabled={enable} onChange={handleTri} className="form-control">
-              <option value="">{text}</option>
-                {
-                classData.map((nData, index) =>(
-                <option key={index} >{nData.libellé_classe}</option>
-                    )
-                )}
-                </select>
-              </div>
-              <div className="form-group col-md-4">
-              <label className="mb-2">Rechercher</label>
-              <input type="search" placeholder="Tapez le nom" aria-label="Search" onChange={Tri} className="form-control" />
-              </div>
-              <div className="btn-group col-md-4" role="group">
-              <ReactToPrint
-                trigger={() => 
-                    <button className="btn btn-success"> <PrinterFill /> Imprimer</button>
-                }
-                content={() => componentPdf}
-                />
-                </div>
-           </div>
-              
-      </div>
-                                 
+<div className="row mb-3">
+  <div className="form-group col-md-4">
+    <label className="mb-2">Niveau</label>
+    <select name="niveau" className="form-control" onChange={(e) => handleNiveau(e)}>
+      <option value="">Selectionnez le Niveau</option>
+      {niveauData.map((nData, index) => (
+        <option key={index} value={nData.id}>{nData.libellee_niveau}</option>
+      ))}
+    </select>
+  </div>
+  <div className="form-group col-md-4">
+    <label className="mb-2">Classe</label>
+    <select name="classe" disabled={enable} onChange={handleTri} className="form-control">
+      <option value="">{text}</option>
+      {classData.map((nData, index) => (
+        <option key={index}>{nData.libellé_classe}</option>
+      ))}
+    </select>
+  </div>
+  <div className="form-group col-md-4">
+    <label className="mb-2">Rechercher</label>
+    <input type="search" placeholder="Tapez le nom" aria-label="Search" onChange={Tri} className="form-control" />
+  </div>
+</div>
+<div className='row '>
+  <div className="btn-group col-md-4 col-sm-6" role="group" aria-label="Basic outlined example">
+    <button type="button" className="btn btn-outline-primary" onClick={handleDisplayActive}>Afficher Actifs</button>
+    <button type="button" className="btn btn-outline-primary" onClick={handleDisplayInactif}>Afficher Inactifs</button>
+  </div>
+  <div className="btn-group col-md-2 col-sm-3" role="group">
+    <ReactToPrint
+      trigger={() => <button className="btn btn-success"> <PrinterFill /> Imprimer</button>}
+      content={() => componentPdf}
+    />
+  </div>
+</div>
+
+                                         
             <div className='container'>
                 <div className='row'>
                     <h3><strong>Ajouter un élève</strong> <Link to='/studInsert' className="btn btn-success"><Plus/>Ajouter</Link></h3>
-                    
-                    <table className='table table-striped table-bordered w-auto'>
+                    {record.length > 0 ? (
+                    <table className='table table-striped table-bordered w-autotable-sm'>
                         <thead>
                             <tr>
                                 <th>Sr No</th>
@@ -227,35 +227,45 @@ export default function StudentList(){ //declaration de la fonction principale
                                 record.map((stuData,index) =>(
                                 <tr key={index}>
                                 <td>{index+1}</td>
-                                <td className='ima'><img src={`http://localhost/ssm/api/image/${stuData.photo}`}    alt={stuData.photo} /></td>
+                                <td className='ima'><img src={`${config.apiBaseUrl}/image/${stuData.photo}`}    alt={stuData.photo} /></td>
                                 <td>{stuData.matricule}</td>
                                 <td>{stuData.nom}</td>
                                 <td>{stuData.prenom}</td>
                                 <td>{stuData.genre}</td>
                                 <td>{stuData.dateNaiss}</td>
                                 <td>{stuData.classe}</td>
-                                <td>{stuData.stat === '1'? "Actif" : "Inactif"}</td>
+                                <td>{stuData.stat === '0'? "Inactif" : "Actif"}</td>
                                 <td className=''>
-                                    
+                                {
+                                            stuData.stat !== '0'? 
                                     <div className="btn-group " role="toolbar" aria-label="Toolbar with button groups">
-                                    
-                                        <div role="group" aria-label="First group">
+                                       
+                                            <div role="group" aria-label="First group">
                                             <Link to={"/studView/"+stuData.matricule}   className="btn btn-light mx-2"><Eye /></Link>
                                         </div>
                                         <div role="group" aria-label="Second group">
                                             <Link to={"/studEdit/"+stuData.matricule} className="btn btn-success mx-2"><PencilSquare /></Link>
                                         </div>
                                         <div  role="group" aria-label="Third group">
-                                            <button onClick={()=> handleDelete(stuData.matricule)} className="btn  btn-danger mx-2"><Trash/></button>       
+                                            <button onClick={()=> HandleStat(stuData.stat,stuData.matricule)} className="btn  btn-danger mx-2"><Trash/></button>       
                                         </div>
+                                        {/* <div role="group" aria-label="second group">
+                                            <IDCards data={stuData} res={ecData} />
+                                        </div> */}
+                                        {/* <div  role="group" aria-label="Third group">
+                                            <button onClick={()=> handleDelete(stuData.matricule)} className="btn  btn-danger mx-2"><Trash/></button>       
+                                        </div> */}
                                         <div role="group" aria-label="Second group">
                                             {
                                                 ins.resultat === 'Verifiez les informations SVP'? <InsAdd data={stuData} />:
                                             ins.find((el)=> el.matricule === stuData.matricule)? <div style={{color: 'green',fontSize:'15px'}}><FaCheck /></div>: <InsAdd data={stuData} />
-
                                             }
-                                        </div>
+                                        </div> 
                                     </div>
+                                    : <div  role="group" aria-label="Third group">
+                                    <button onClick={()=> HandleStat(stuData.stat,stuData.matricule)} className="btn  btn-danger mx-2"><Trash/></button>       
+                                </div>
+                                }
                                 </td>
                                 </tr>
                                 ))
@@ -264,10 +274,12 @@ export default function StudentList(){ //declaration de la fonction principale
 
 
                     </table>
-                
+                    ):(
+                    <p>Aucune donnée disponible</p>
+                    )}
                 </div>
                 <div style={{ display: "none" }}>
-                <div ref={(el) => (componentPdf = el)} style={{width:'100%',padding:'0px 12px',fontSize:'10px'}} >
+                <div ref={(el) => (componentPdf = el)} style={{width:'100%',padding:'20px 40px',fontSize:'10px'}} >
                 <div id="head">
                 {/* entete du bulletin */}
                 <div>
@@ -278,19 +290,20 @@ export default function StudentList(){ //declaration de la fonction principale
                     <p>Délégation Départementale du Lom et Djerem</p>
                 </div>
                 <div>
-                <img src={`http://localhost/ssm/api/logo/${ecData.logo}`} style={{ width: "80px" }} alt="Logo" />
-                </div>
-                <div>
-                    <p className="fw-bold">REPUBLIC OF CAMEROON</p>
-                    <p>Peace Work Fatherland</p>
-                    <p className="fw-bold">MINISTRY OF BASIC EDUCATION</p>
-                    <p>East Regional Delegation</p>
-                    <p>Lom and Djerem Divisional Delegation</p>
-                </div>
+                    <img src={`${config.apiBaseUrl}/logo/${ecData.logo}`} style={{ width: "80px" }} alt="Logo" />
+                    </div>
+                    <div>
+                        <p className="fw-bold">REPUBLIC OF CAMEROON</p>
+                        <p>Peace Work Fatherland</p>
+                        <p className="fw-bold">MINISTRY OF BASIC EDUCATION</p>
+                        <p>East Regional Delegation</p>
+                        <p>Lom and Djerem Divisional Delegation</p>
+                    </div>
                 </div>
                 <div id='middle'>
-                <p id='tiEcol'>NEW GENERATION "SCHOOL OF PERFORMANCE" </p>
+                    <p id='tiEcol'>{ecData.nom} </p>
                 </div>
+                <h5>Liste des élèves</h5>
                 <table className='table table-striped table-bordered '>
                         <thead>
                             <tr>

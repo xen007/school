@@ -5,6 +5,7 @@ import { Pen } from "react-bootstrap-icons";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { useNavigate } from "react-router-dom";
+import config from '../component/config';
 // fonction principale
 export default function SubAffect({data}) {
    // declaration des constantes
@@ -25,7 +26,7 @@ const handleInput =(e) =>{
   const[prof,setProf]=useState([])
   useEffect( () => {
     const getNiveau = async()=>{
-    const reqdata = await fetch("http://localhost/ssm/api/prof.php/"+ libel)
+    const reqdata = await fetch(`${config.apiBaseUrl}/prof.php/`+ libel)
     const resdata = await reqdata.json()
     console.log(resdata)
     setProf(resdata)
@@ -40,7 +41,7 @@ const handleSubmit =async(e)=>{
       idSub:id,
       ens: formvalue.ens
   }
-  const res = await axios.put('http://localhost/ssm/api/aff.php', formData)
+  const res = await axios.put(`${config.apiBaseUrl}/aff.php`, formData)
   if(res.data.success){
       // setMessage(res.data.success)
       alert('affecté')

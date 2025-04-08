@@ -1,7 +1,7 @@
 <?php
 class Dbase {
     private $server = 'localhost';
-    private $dbname = 'monou';
+    private $dbname = 'char';
     private $user = 'root';
     private $pass = '';
 

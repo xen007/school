@@ -2,6 +2,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import config from '../component/config';
 // fonction principale
 export default function EvalInsert(){
     // declaration des constantes
@@ -15,7 +16,7 @@ export default function EvalInsert(){
         getSubject()
     },[])
     const getSubject= async()=>{
-        const reqdata = await fetch("http://localhost/ssm/api/mat.php")
+        const reqdata = await fetch(`${config.apiBaseUrl}/mat.php`)
         const resdata = await reqdata.json()
             setSubjectData(resdata)
         }
@@ -37,7 +38,7 @@ export default function EvalInsert(){
            niveau:formvalue.niveau,
             
         }
-        const res = await axios.post('http://localhost/ssm/api/eval.php', formData)
+        const res = await axios.post(`${config.apiBaseUrl}/eval.php`, formData)
         if(res.data.success){
             setMessage(res.data.success)
             setTimeout(() => {
@@ -54,7 +55,7 @@ export default function EvalInsert(){
         getNiveau()
     },[])
     const getNiveau=async()=>{
-        const req = await  fetch('http://localhost/ssm/api/niveau.php/')
+        const req = await  fetch(`${config.apiBaseUrl}/niveau.php/`)
         const res = await req.json()
         setNiveau(res)
     }

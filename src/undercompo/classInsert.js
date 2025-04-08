@@ -2,6 +2,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import config from '../component/config';
 // fonction principale
 export default function ClassInsert(){
     // declaration des contantes
@@ -20,7 +21,7 @@ export default function ClassInsert(){
     const[niveauData,setNiveauData] = useState([])
     useEffect( () => {
         const getNiveau = async()=>{
-        const reqdata = await fetch("http://localhost/ssm/api/niveau.php")
+        const reqdata = await fetch(`${config.apiBaseUrl}/niveau.php`)
         const resdata = await reqdata.json()
         // console.log(resdata)
         setNiveauData(resdata)
@@ -30,7 +31,7 @@ export default function ClassInsert(){
     const[filiereData,setFiliereData] = useState([])
     useEffect( () => {
         const getFiliere = async()=>{
-        const reqdata = await fetch("http://localhost/ssm/api/filiere.php")
+        const reqdata = await fetch(`${config.apiBaseUrl}/filiere.php`)
         const resdata = await reqdata.json()
         // console.log(resdata)
         setFiliereData(resdata)
@@ -40,7 +41,7 @@ export default function ClassInsert(){
     const[categ,setCategData] = useState([])
     useEffect( () => {
         const getCateg = async()=>{
-        const reqdata = await fetch("http://localhost/ssm/api/categCl.php")
+        const reqdata = await fetch(`${config.apiBaseUrl}/categCl.php`)
         const resdata = await reqdata.json()
         // console.log(resdata)
         setCategData(resdata)
@@ -64,7 +65,7 @@ export default function ClassInsert(){
             cat: formvalue.cat,
             filiere: formvalue.filiere,
         }
-        const res = await axios.post('http://localhost/ssm/api/classe.php', formData)
+        const res = await axios.post(`${config.apiBaseUrl}/classe.php`, formData)
         if(res.data.success){
             setMessage(res.data.success)
             setTimeout(() => {

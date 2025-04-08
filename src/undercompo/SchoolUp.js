@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import config from '../component/config';
 
 // Main function
 export default function DateEdit() {
@@ -8,6 +9,8 @@ export default function DateEdit() {
   const [formvalue, setFormvalue] = useState({
     nomec: '',
     devise: '',
+    bp: '',
+    contact: '',
   });
   const [logoVal, setLogo] = useState({ logo: '' });
   const location = useLocation();
@@ -28,7 +31,7 @@ export default function DateEdit() {
   // Function to fetch class information
   useEffect(() => {
     const getnoData = async () => {
-      const requestData = await fetch("http://localhost/ssm/api/schoolUp.php/" + id);
+      const requestData = await fetch(`${config.apiBaseUrl}/schoolUp.php/` + id);
       const responseData = await requestData.json();
       setFormvalue(responseData);
       setLogo(responseData);
@@ -43,6 +46,8 @@ export default function DateEdit() {
     formData.append('id', id);
     formData.append('nomec', formvalue.nomec);
     formData.append('devise', formvalue.devise);
+    formData.append('bp', formvalue.bp);
+    formData.append('contact', formvalue.contact);
     if (logoVal.logo) {
       formData.append('logo', logoVal.logo);
     }
@@ -50,7 +55,7 @@ export default function DateEdit() {
     try {
       const res = await axios({
         method: 'post',
-        url: 'http://localhost/ssm/api/schoolUp.php',
+        url: `${config.apiBaseUrl}/schoolUp.php`,
         data: formData,
         headers: { 'Content-Type': 'multipart/form-data' }
       });
@@ -82,6 +87,14 @@ export default function DateEdit() {
               <div className="form-group col-md-4">
                 <label className="mb-2">Devise</label>
                 <input type="text" className="form-control" name="devise" id="devise" value={formvalue.devise} onChange={handleInput} />
+              </div>
+              <div className="form-group col-md-4">
+                <label className="mb-2">BP</label>
+                <input type="text" className="form-control" name="bp" id="bp" value={formvalue.bp} onChange={handleInput} />
+              </div>
+              <div className="form-group col-md-4">
+                <label className="mb-2">Contact</label>
+                <input type="text" className="form-control" name="contact" id="contact" value={formvalue.contact} onChange={handleInput} />
               </div>
               <div className="form-group col-md-3">
                 <label className="mb-2">Logo</label>

@@ -4,6 +4,7 @@ import './Modal.css'
 import { Link } from "react-router-dom"
 import LevEdit from "../undercompo/levEdit"
 import { Eye } from "react-bootstrap-icons"
+import config from './config';
 
 export default function Levels(){  //creation de la fonction principaae
     //declaration de la variable pour stocker les noveaux 
@@ -13,7 +14,7 @@ export default function Levels(){  //creation de la fonction principaae
         getNiveau()
     },[])
     const getNiveau=async()=>{
-        const req = await  fetch('http://localhost/ssm/api/niveau.php/')
+        const req = await  fetch(`${config.apiBaseUrl}/niveau.php/`)
         const res = await req.json()
         setNiveau(res)
     }

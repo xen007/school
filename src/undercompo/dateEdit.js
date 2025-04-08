@@ -2,6 +2,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import config from '../component/config';
 //fonction principale
 export default function DateEdit(){
     // déclaration des constantes
@@ -25,7 +26,7 @@ export default function DateEdit(){
     useEffect ( () => {
         const getnoData = async() =>{
           // recherche  dans la table avec les parametres envoyés
-            const requestData = await fetch("http://localhost/ssm/api/dates.php/?" + new URLSearchParams({
+            const requestData = await fetch(`${config.apiBaseUrl}/dates.php/?` + new URLSearchParams({
              id:id,
              tab : data
           }).toString())
@@ -53,7 +54,7 @@ export default function DateEdit(){
             fin:formvalue.fin,
             
         }
-        const res = await axios.put('http://localhost/ssm/api/dates.php', formData)
+        const res = await axios.put(`${config.apiBaseUrl}/dates.php`, formData)
         if(res.data.success){
             setMessage(res.data.success)
             setTimeout(() => {

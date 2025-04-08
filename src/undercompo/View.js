@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import './stview.css'
+import config from '../component/config';
 
 export default function View () {
     const[formvalue, setFormvalue] = useState({
@@ -32,7 +33,7 @@ export default function View () {
     function tabEnseig(){
         var headers = {"Accept":"application/json",
             "Content-Type": "application/json"};
-    axios.get(`http://localhost/ssm/api/view.php/${matricule}`, headers)
+    axios.get(`${config.apiBaseUrl}/view.php/${matricule}`, headers)
     .then(response=>{
         console.log(response.data);
         setFormvalue(response.data);
@@ -46,7 +47,7 @@ export default function View () {
 
     <div className="pop container">
         <div className='card imgholder'>
-                    <img src={`http://localhost/ssm/api/imageTeacher/${formvalue.photo}`} alt={formvalue.photo} width='200' height='200' classname="showing"/>
+                    <img src={`${config.apiBaseUrl}/imageTeacher/${formvalue.photo}`} alt={formvalue.photo} width='200' height='200' classname="showing"/>
               </div>
                 <br/>
             <div className="row">
