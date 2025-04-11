@@ -159,26 +159,51 @@ const Excell = () => {
 });
 return newAverages;
 };
-
 const assignRanks = () => {
-  const averages = calculateAverages();
-  let sortedStudents;
-
-  if (selectedTrim === '3') {
-    // Sort in descending order based on Term 3's averageGmoy
-    sortedStudents = Object.keys(averages).sort((a, b) => averages[b].averageGmoy - averages[a].averageGmoy);
-  } else {
-    // Sort in descending order based on Term 1 and 2's averageMoy
-    sortedStudents = Object.keys(averages).sort((a, b) => averages[b].averageMoy - averages[a].averageMoy);
-  }
-
-  sortedStudents.forEach((matricule, index) => {
-    averages[matricule].rank = index + 1; // Assign rank based on sorted order, starting from 1
-  });
-
-  setRanks(sortedStudents);
+    const averages = calculateAverages();
+    let validStudents = [];
+    let invalidStudents = [];
+  
+    // Separate students with valid and invalid averages
+    Object.keys(averages).forEach((matricule) => {
+      if (selectedTrim === '3') {
+        const avg = parseFloat(averages[matricule].averageGmoy);
+        if (!isNaN(avg)) {
+          validStudents.push(matricule); // Add only if average is a valid float
+        } else {
+          invalidStudents.push(matricule);
+        }
+      } else {
+        const avg = parseFloat(averages[matricule].averageMoy);
+        if (!isNaN(avg)) {
+          validStudents.push(matricule); // Add only if average is a valid float
+        } else {
+          invalidStudents.push(matricule);
+        }
+      }
+    });
+  
+    // Sort valid students in descending order
+    validStudents.sort((a, b) => {
+      return selectedTrim === '3'
+        ? averages[b].averageGmoy - averages[a].averageGmoy
+        : averages[b].averageMoy - averages[a].averageMoy;
+    });
+  
+    // Assign ranks only to valid students
+    validStudents.forEach((matricule, index) => {
+      averages[matricule].rank = index + 1; // Rank starts from 1
+    });
+  
+    // For invalid students, do not assign a rank
+    invalidStudents.forEach((matricule) => {
+      averages[matricule].rank = null; // No rank for invalid averages
+    });
+  
+    // Update ranks in state
+    setRanks([...validStudents, ...invalidStudents]);
+    
 };
-
 
 
 useEffect(() => {
@@ -257,7 +282,8 @@ if (Object.keys(groupedData).length > 0) {
         {ranks.map((matricule, index) => (
           <>
             
-              {averages[matricule].rank === 1 && (
+              { (averages[matricule].rank >= 0 && averages[matricule].rank <= 4) && (
+
               <div key={matricule} style={{ pageBreakInside: 'avoid', marginBottom: '10px', height: 'auto' }}>
               <div  className="image-container">
               <img src={logo} alt="Background logo" className="background-image" />

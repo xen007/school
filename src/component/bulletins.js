@@ -5,6 +5,7 @@ import config from './config';
 import Bulls from './bulls'; // For Trim 1 and 2
 import Bullt from './bullt'; // For Trim 3
 
+
 const Bulletins = () => {
   const [groupedData, setGroupedData] = useState({});
   const [averages, setAverages] = useState({});
@@ -67,7 +68,7 @@ const Bulletins = () => {
 
   const handleSubmit = async (e) => {
       e.preventDefault();
-      if (formvalue.trim === '3') {
+      if (formvalue.trim === '4') {
               const verificationCode = prompt("Please enter the verification code:");
               if (verificationCode === null) { // User pressed cancel
                   alert("Verification canceled.");
@@ -193,13 +194,13 @@ const Bulletins = () => {
             });
         });
 
-        // Calculate averages for term 1 and 2
+        // Calculate averages for term 1,2 and 3
         const averageNote1 = totalBaremeNote1 === 0 ? 'N/A' : ((totalNote1 / totalBaremeNote1) * 20).toFixed(2);
         const averageNote2 = totalBaremeNote2 === 0 ? 'N/A' : ((totalNote2 / totalBaremeNote2) * 20).toFixed(2);
         const averageNote3 = totalBaremeNote3 === 0 ? 'N/A' : ((totalNote3 / totalBaremeNote3) * 20).toFixed(2);
         const averageMoy = totalBareme === 0 ? 'N/A' : ((totalMoy / totalBareme) * 20).toFixed(2);
 
-        // Calculate averages for term 3
+        // Calculate averages for term 4
         const averageMois1 = totalBaremeNote1 === 0 ? 'N/A' : ((totalMoy1 / totalBaremeNote1) * 20).toFixed(2);
         const averageMois2 = totalBaremeNote2 === 0 ? 'N/A' : ((totalMoy2 / totalBaremeNote2) * 20).toFixed(2);
         const averageMois3 = totalBaremeNote3 === 0 ? 'N/A' : ((totalMoy3 / totalBaremeNote3) * 20).toFixed(2);
@@ -220,7 +221,7 @@ const Bulletins = () => {
             appreciationMoy: getAppreciation(averageMoy),
             averageMois1,
             averageMois2,
-            averageMois3,
+            averageMois3, 
             averageGmoy,
             totalMoy1,
             totalMoy2,
@@ -252,7 +253,7 @@ const assignRanks = () => {
 
   // Separate students with valid and invalid averages
   Object.keys(averages).forEach((matricule) => {
-    if (selectedTrim === '3') {
+    if (selectedTrim === '4') {
       if (averages[matricule].averageGmoy !== null && averages[matricule].averageGmoy !== "N/A") {
         validStudents.push(matricule);
       } else {
@@ -269,7 +270,7 @@ const assignRanks = () => {
 
   // Sort valid students in descending order
   validStudents.sort((a, b) => {
-    return selectedTrim === '3'
+    return selectedTrim === '4'
       ? averages[b].averageGmoy - averages[a].averageGmoy
       : averages[b].averageMoy - averages[a].averageMoy;
   });
@@ -356,10 +357,10 @@ const getOrdinalFr = (n) => {
 
 let nomt = "";
 const getOrdinal = (n, filiere) => {
-  if (filiere === '2') {
+  if (filiere === 2) {
     nomt = "Term";
     return getOrdinalEn(n);
-  } else if (filiere === '1') {
+  } else if (filiere === 1) {
     nomt = "Trimestre";
     return getOrdinalFr(n);
   }
@@ -382,9 +383,9 @@ const getAppreciationFr = (synth) => {
 };
 
 const getAppreciation = (synth, filiere) => {
-  if (filiere === '1') {
+  if (filiere === 1) {
     return getAppreciationFr(synth);
-  } else if (filiere === '2') {
+  } else if (filiere === 2) {
     return getAppreciationEn(synth);
   }
   return 'N/A';
@@ -419,6 +420,7 @@ const getAppreciation = (synth, filiere) => {
             <option value="1">Timestre 1</option>
             <option value="2">Timestre 2</option>
             <option value="3">Timestre 3</option>
+            <option value="4">Annuel</option>
           </select>
         </div>
         <div className="col-md-1">
@@ -459,8 +461,12 @@ const getAppreciation = (synth, filiere) => {
             <div id='middle' style={{ textAlign: 'center', marginTop: '10px' }}>
               <p id='tiEcol'>{ecData.nomec}</p>
               <p><i>{ecData.devise}</i></p>
-              <p className="fw-bold">{getOrdinal(formvalue.trim, groupedData[matricule].eleve.filiere)} {nomt}</p>
-              <p>Année-scolaire: {'2024-2025'}</p>
+              <p className="fw-bold">
+    {formvalue.trim === '4' 
+        ? `Annual ${nomt}` 
+        : `${getOrdinal(formvalue.trim, groupedData[matricule].eleve.filiere)} ${nomt}`}
+</p>
+ <p>Année-scolaire: {'2024-2025'}</p>
             </div>
             <div id="head" style={{ display: 'flex', justifyContent: 'space-between', marginTop: '10px' }}>
               <div id='botto' style={{ display: 'flex' }}>
@@ -479,7 +485,7 @@ const getAppreciation = (synth, filiere) => {
                 <p><strong>Effectif:</strong> {studentCounts[groupedData[matricule].eleve.classe]}</p>
               </div>
             </div>
-            {selectedTrim === '1' || selectedTrim === '2' ? (
+            {selectedTrim === '1' || selectedTrim === '2'|| selectedTrim === '3' ? (
               <Bulls
                 groupedData={groupedData}
                 matricule={matricule}

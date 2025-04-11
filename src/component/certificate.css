@@ -66,8 +66,7 @@ p {
 }
 #tiC{
   font-size: 27px;
-  margin-bottom: 15px;
-  margin-left: 330px;
+  padding:10px;
   color: rgb(15, 15, 104);
   font-weight: 700;
   font-family: 'Lucida Handwriting', Georgia, 'Times New Roman', Times, serif;

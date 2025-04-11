@@ -106,7 +106,7 @@ export default function IDCards() {
               </div>
               <div style={{ textAlign: 'left' }}>
                 <p style={{ margin: 0, fontSize: '8px' }}>Adresse/ Address: {ecData.adresse}</p>
-                <p style={{ margin: 0, fontSize: '8px' }}>BP/ PO Box: {ecData.bp} Bertoua</p>
+               {/* <p style={{ margin: 0, fontSize: '8px' }}>BP/ PO Box: {ecData.bp} Bertoua</p> */}
                 <p style={{ margin: 0, fontSize: '8px' }}>Tel/ Phone: {ecData.contact}</p>
               </div>
             </Card.Header>

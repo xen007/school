@@ -160,21 +160,45 @@ export default function Hon() {
   
   const assignRanks = () => {
     const averages = calculateAverages();
-    let sortedStudents;
+    let validStudents = [];
+    let invalidStudents = [];
   
-    if (selectedTrim === '3') {
-      // Sort in descending order based on Term 3's averageGmoy
-      sortedStudents = Object.keys(averages).sort((a, b) => averages[b].averageGmoy - averages[a].averageGmoy);
-    } else {
-      // Sort in descending order based on Term 1 and 2's averageMoy
-      sortedStudents = Object.keys(averages).sort((a, b) => averages[b].averageMoy - averages[a].averageMoy);
-    }
-  
-    sortedStudents.forEach((matricule, index) => {
-      averages[matricule].rank = index + 1; // Assign rank based on sorted order, starting from 1
+    // Separate students with valid and invalid averages
+    Object.keys(averages).forEach((matricule) => {
+      if (selectedTrim === '3') {
+        if (averages[matricule].averageGmoy !== null && averages[matricule].averageGmoy !== "N/A") {
+          validStudents.push(matricule);
+        } else {
+          invalidStudents.push(matricule);
+        }
+      } else {
+        if (averages[matricule].averageMoy !== null && averages[matricule].averageMoy !== "N/A") {
+          validStudents.push(matricule);
+        } else {
+          invalidStudents.push(matricule);
+        }
+      }
     });
   
-    setRanks(sortedStudents);
+    // Sort valid students in descending order
+    validStudents.sort((a, b) => {
+      return selectedTrim === '3'
+        ? averages[b].averageGmoy - averages[a].averageGmoy
+        : averages[b].averageMoy - averages[a].averageMoy;
+    });
+  
+    // Assign ranks only to valid students
+    validStudents.forEach((matricule, index) => {
+      averages[matricule].rank = index + 1; // Rank starts from 1
+    });
+  
+    // Optionally, add invalid students to the end with no rank
+    invalidStudents.forEach((matricule) => {
+      averages[matricule].rank = null; // No rank assigned
+    });
+  
+    // Update ranks in state
+    setRanks([...validStudents, ...invalidStudents]);
   };
   
   
@@ -201,11 +225,16 @@ export default function Hon() {
     return filiere === '1' ? "L'ENSEIGNANT" : 'THE TEACHER';
  
 };
+const getTic = (filiere) => {
+  // return filiere === '1' ? 'FÉLICITATIONS' : 'CONGRATULATIONS';
+  return filiere === '1' ? "TABLEAU D'HONNEUR" : 'HONNOR ROLL';
+
+};
 const getCertContent = (filiere, averages, groupedData, matricule, studentCounts) => {
     if (filiere === '1') {
       return (
         <>
-          <p id='tiC'>TABLEAU D'HONNEUR</p>
+          
           <p><strong>Groupe Scolaire Bilingue CHARIS</strong> récompense l'élève <strong id='nom'>{groupedData[matricule].eleve.nom} {groupedData[matricule].eleve.prenom}</strong></p>
           <p>Qui mérite un tableau d'honneur pour le travail de l'année scolaire <strong>{groupedData[matricule].eleve.scolaire}</strong></p>
           <p>Avec une moyenne annuelle de <strong>{averages[matricule].averageGmoy}/20</strong> et une position de <strong>{averages[matricule].rank}/{studentCounts[groupedData[matricule].eleve.classe]}</strong></p>
@@ -215,7 +244,7 @@ const getCertContent = (filiere, averages, groupedData, matricule, studentCounts
     } else if (filiere === '2') {
       return (
         <>
-          <p id='tiC'>HONOUR ROLL</p>
+
           <p><strong>CHARIS Bilingual School Complex</strong> awards the pupil <strong id='nom'>{groupedData[matricule].eleve.nom} {groupedData[matricule].eleve.prenom}</strong></p>
           <p>Who merits an honour roll for the work of the academic year <strong>{groupedData[matricule].eleve.scolaire}</strong></p>
           <p>With an annual average of <strong>{averages[matricule].averageGmoy}/20</strong> and a position of <strong>{averages[matricule].rank}/{studentCounts[groupedData[matricule].eleve.classe]}</strong></p>
@@ -271,7 +300,7 @@ const getCertContent = (filiere, averages, groupedData, matricule, studentCounts
         <div ref={(el) => (componentPdf = el)}>
           {ranks.map((matricule, index) => (
             <>
-              {averages[matricule].averageGmoy > 10 && (
+              {averages[matricule].averageGmoy >= 12 && (
                 <div key={matricule} style={{ padding: '30px' }} className="image-container">
                   <img src={logo} alt="Background logo" className="background-image" />
                   <div id="heads">
@@ -295,8 +324,9 @@ const getCertContent = (filiere, averages, groupedData, matricule, studentCounts
                   </div>
                   <div id="middles" style={{ padding: '80px 50px' }}>
                     <p id="tiEcol">{ecData.nomec}</p>
+                    <p id='tiC'>{getTic(groupedData[matricule].eleve.filiere)}</p>
                   </div>
-                  <div id='tex' style={{ padding: '50px', marginTop: '50px' }}>
+                  <div id='tex' style={{ padding: '50px', marginTop: '100px' }}>
                     {getCertContent(groupedData[matricule].eleve.filiere, averages, groupedData, matricule, studentCounts)}
                   </div>
                   <div id='dte'>

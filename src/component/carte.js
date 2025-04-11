@@ -14,7 +14,7 @@ const IDCards = ({ data, res }) => {
       <Button variant="primary" onClick={handleShow}>
         <PersonBadgeFill />
       </Button>
-
+ bn
       <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
         <Modal.Header closeButton>
           <Modal.Title>ID Card for {data.nom}</Modal.Title>

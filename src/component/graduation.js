@@ -144,14 +144,14 @@ export default function Graduation() {
               </div>
               <div id="middles">
                 <p id="tiEcol">{ecData.nomec}</p>
-              </div>
-              
-              <div id='tex'>
                 <div id='tiC'>
                     <p>CERTIFICAT DE GRADUATION</p> 
-                    <p style={{fontSize:'18px',marginLeft:'100px'}}><em >GRADUATION CERTIFICATE</em></p>
+                    <p style={{fontSize:'18px'}}><em >GRADUATION CERTIFICATE</em></p>
                 </div>
-                
+              </div>
+              
+              <div id='tex' style={{ padding: '50px', marginTop: '30px' }}>
+
                 <p>Je soussignée Madame <strong>{ecData.responsable}</strong> Directrice de {ecData.nomec},</p>
                 <p style={{fontSize:'15px'}}><em>I, the undersigned Mrs. Headmistress of</em></p>
 

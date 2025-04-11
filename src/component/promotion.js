@@ -89,12 +89,16 @@ export default function Promotion() {
   const getRem = (filiere) => {
     return filiere === '1' ? 'FÉLICITATIONS' : 'CONGRATULATIONS';
   };
-
+  const getTic = (filiere) => {
+    // return filiere === '1' ? 'FÉLICITATIONS' : 'CONGRATULATIONS';
+    return filiere === '1' ? "CERTIFICAT DE PROMOTION" : 'PROMOTION CERTIFICATE';
+  
+  };
   const getCertContent = (filiere, student) => {
     if (filiere === '1') {
       return (
         <>
-          <p id='tiC'>CERTIFICAT DE PROMOTION</p>
+         
           <p>Je soussignée Madame <strong>{ecData.responsable}</strong>,</p>
           <p>Directrice de {ecData.nomec},</p>
           <p>Certifie que l'élève <strong id='nom'>{student.nom} {student.prenom}</strong></p>
@@ -106,7 +110,7 @@ export default function Promotion() {
     } else if (filiere === '2') {
       return (
         <>
-          <p id='tiC'>PROMOTION CERTIFICATE</p>
+
           <p>I, the undersigned Mrs. <strong>{ecData.responsable}</strong>,</p>
           <p>Headmistress of {ecData.nomec},</p>
           <p>Certify that the pupil <strong id='nom'>{student.nom} {student.prenom}</strong></p>
@@ -174,8 +178,9 @@ export default function Promotion() {
               </div>
               <div id="middles">
                 <p id="tiEcol">{ecData.nomec}</p>
+                <p id='tiC'>{getTic(student.filiere)}</p>
               </div>
-              <div id='tex'>
+              <div id='tex'  style={{ padding: '20px', marginTop: '50px' }}>
                 {getCertContent(student.filiere, student)}
               </div>
               <div id='dte'>
