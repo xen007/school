@@ -40,7 +40,7 @@
 }
 #tex{
   position: absolute;
-  top: 190px;
+  top: 270px;
   left: 50px;
   font-size: 23px;
 }
@@ -58,7 +58,7 @@
   position: absolute; 
   font-size: 23px; 
   font-weight: bold; 
-  top: 590px; 
+  top: 600px; 
   font-style: italic; 
 }
 p {

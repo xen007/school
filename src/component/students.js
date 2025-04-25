@@ -88,6 +88,25 @@ export default function StudentList(){ //declaration de la fonction principale
           // console.log(niveauId)
       }
       let componentPdf = useRef()
+
+      const handleExporter = () => {
+        let vcfString='';
+        studentData.map((stuData) => {
+        vcfString+= `BEGIN:VCARD\n`;
+        vcfString += `VERSION:3.0\n`;
+        vcfString += `FN:${stuData.nom} ${stuData.prenom};${stuData.tuteur}\n`;
+        vcfString += `N:${stuData.prenom};${stuData.tuteur} ${stuData.nom};;;\n`;
+        vcfString += `TEL;TYPE=CELL:${stuData.phone}\n`;
+        vcfString += `TEL;TYPE=CELL:${stuData.phoneM}\n`;
+        vcfString += `item1.ADR;TYPE=HOME:${stuData.adresse}\n`;
+        vcfString += `END:VCARD\n`;
+        });
+        const blob = new Blob([vcfString], { type: 'text/vcard' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'contacts.vcf';
+        link.click();
+      };
   
     // constante pour stockr les donnees tries eet fonctions de tris
     if (studentData.resultat === 'Verifiez les informations SVP') {
@@ -197,6 +216,9 @@ export default function StudentList(){ //declaration de la fonction principale
       trigger={() => <button className="btn btn-success"> <PrinterFill /> Imprimer</button>}
       content={() => componentPdf}
     />
+  </div>
+  <div className="btn-group col-md-2 col-sm-3" role="group">
+    <button className='btn btn-primary' onClick={handleExporter}>Contact-Exp</button>
   </div>
 </div>
 

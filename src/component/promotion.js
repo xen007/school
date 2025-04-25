@@ -180,7 +180,7 @@ export default function Promotion() {
                 <p id="tiEcol">{ecData.nomec}</p>
                 <p id='tiC'>{getTic(student.filiere)}</p>
               </div>
-              <div id='tex'  style={{ padding: '20px', marginTop: '50px' }}>
+              <div id='tex'  style={{ padding: '20px'}}>
                 {getCertContent(student.filiere, student)}
               </div>
               <div id='dte'>

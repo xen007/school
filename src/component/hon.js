@@ -165,7 +165,7 @@ export default function Hon() {
   
     // Separate students with valid and invalid averages
     Object.keys(averages).forEach((matricule) => {
-      if (selectedTrim === '3') {
+      if (selectedTrim === '4') {
         if (averages[matricule].averageGmoy !== null && averages[matricule].averageGmoy !== "N/A") {
           validStudents.push(matricule);
         } else {
@@ -182,7 +182,7 @@ export default function Hon() {
   
     // Sort valid students in descending order
     validStudents.sort((a, b) => {
-      return selectedTrim === '3'
+      return selectedTrim === '4'
         ? averages[b].averageGmoy - averages[a].averageGmoy
         : averages[b].averageMoy - averages[a].averageMoy;
     });
@@ -211,9 +211,9 @@ export default function Hon() {
   
     const getFonc = (filiere) => {
       switch (filiere) {
-        case '1':
+        case 1:
           return 'La Directrice';
-        case '2':
+        case 2:
           return 'The Headmistress';
         default:
           return 'N/A';
@@ -231,7 +231,7 @@ const getTic = (filiere) => {
 
 };
 const getCertContent = (filiere, averages, groupedData, matricule, studentCounts) => {
-    if (filiere === '1') {
+    if (filiere === 1) {
       return (
         <>
           
@@ -241,7 +241,7 @@ const getCertContent = (filiere, averages, groupedData, matricule, studentCounts
           <p>À qui de droit pour le tableau d'honneur.</p>
         </>
       );
-    } else if (filiere === '2') {
+    } else if (filiere === 2) {
       return (
         <>
 
@@ -281,7 +281,7 @@ const getCertContent = (filiere, averages, groupedData, matricule, studentCounts
           <label className="mb-2">Trimestre</label>
           <select id='trim' name="trim" className="form-control" onChange={handleInput}>
             <option value="">Choisir le Timestre</option>
-            <option value="3">Timestre 3</option>
+            <option value="4">Timestre 3</option>
           </select>
         </div>
         <div className="col-md-1">
@@ -326,7 +326,7 @@ const getCertContent = (filiere, averages, groupedData, matricule, studentCounts
                     <p id="tiEcol">{ecData.nomec}</p>
                     <p id='tiC'>{getTic(groupedData[matricule].eleve.filiere)}</p>
                   </div>
-                  <div id='tex' style={{ padding: '50px', marginTop: '100px' }}>
+                  <div id='tex' style={{ padding: '50px' }}>
                     {getCertContent(groupedData[matricule].eleve.filiere, averages, groupedData, matricule, studentCounts)}
                   </div>
                   <div id='dte'>

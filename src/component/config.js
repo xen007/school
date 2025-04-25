@@ -1,7 +1,7 @@
 // src/config.js
 
 const config = {
-    apiBaseUrl: 'http://localhost/ssm/api'
+    apiBaseUrl: 'http://ssm.com/ssm/api'
   };
   
   export default config;

@@ -166,7 +166,7 @@ const assignRanks = () => {
   
     // Separate students with valid and invalid averages
     Object.keys(averages).forEach((matricule) => {
-      if (selectedTrim === '3') {
+      if (selectedTrim === '4') {
         const avg = parseFloat(averages[matricule].averageGmoy);
         if (!isNaN(avg)) {
           validStudents.push(matricule); // Add only if average is a valid float
@@ -185,7 +185,7 @@ const assignRanks = () => {
   
     // Sort valid students in descending order
     validStudents.sort((a, b) => {
-      return selectedTrim === '3'
+      return selectedTrim === '4'
         ? averages[b].averageGmoy - averages[a].averageGmoy
         : averages[b].averageMoy - averages[a].averageMoy;
     });
@@ -222,9 +222,9 @@ if (Object.keys(groupedData).length > 0) {
 
   const getFonc = (filiere) => {
     switch (filiere) {
-      case '1':
+      case 1:
         return 'La Directrice';
-      case '2':
+      case 2:
         return 'The Headmistress';
       default:
         return 'N/A';
@@ -263,7 +263,7 @@ if (Object.keys(groupedData).length > 0) {
           <label className="mb-2">Trimestre</label>
           <select id='trim' name="trim" className="form-control" onChange={handleInput}>
             <option value="">Choisir le Timestre</option>
-            <option value="3">Timestre 3</option>
+            <option value="4">Timestre 3</option>
           </select>
         </div>
         <div className="col-md-1">
@@ -308,14 +308,13 @@ if (Object.keys(groupedData).length > 0) {
               </div>
               <div id="middles">
                 <p id="tiEcol">{ecData.nomec}</p>
+                <div id='tiC'>
+                    <p>BOURSE SCOLAIRE (5%)</p> 
+                    <p style={{fontSize:'18px'}}><em > (5%) SCOLARSHIP</em></p>
+                </div>
               </div>
               
               <div id='tex'>
-                <div id='tiC'>
-                    <p>BOURSE SCOLAIRE (5%)</p> 
-                    <p style={{fontSize:'18px',marginLeft:'120px'}}><em > (5%) SCOLARSHIP</em></p>
-                </div>
-
                 <p>DÉCERNÉ à <strong style={{fontSize:'23px'}} id='nom'>{groupedData[matricule].eleve.nom} {groupedData[matricule].eleve.prenom}</strong></p>
                 <p style={{fontSize:'18px'}}><em>AWARDED to</em></p>
                 

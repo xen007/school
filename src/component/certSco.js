@@ -145,19 +145,23 @@ export default function CertSco() {
               </div>
               <div id="middles"  style={{ padding: '60px 30px' }}>
                 <p id="tiEcol">{ecData.nomec}</p>
+                <div id='tiC'>
+                    <p>CERTIFICAT DE SCOLARITE</p> 
+                    <p style={{fontSize:'18px'}}><em >SCHOOLING CERTIFICATE</em></p>
+                </div>
               </div>
               
               <div id='tex' style={{ padding: '30px', marginTop: '30px' }}>
-                <div id='tiC'>
-                    <p>CERTIFICAT DE SCOLARITE</p> 
-                    <p style={{fontSize:'18px',marginLeft:'80px'}}><em >SCHOOLING CERTIFICATE</em></p>
-                </div>
+               
                 
                 <p>Je soussignée Madame <strong>{ecData.responsable}</strong> Directrice de {ecData.nomec},</p>
                 <p style={{fontSize:'15px'}}><em>I, the undersigned Mrs. Headmistress of</em></p>
 
                 <p>Certifie que l'élève <strong style={{fontSize:'23px'}} id='nom'>{student.nom} {student.prenom}</strong>, Né(e) le <strong><em style={{fontSize:'18px'}}>{student.dateNaiss}</em></strong> à <strong><em style={{fontSize:'18px'}}>{student.lieuNaiss}</em></strong> </p>
                 <p style={{fontSize:'15px'}}><em>Certify that the pupil Born on the </em></p>
+
+                <p>de <strong style={{fontSize:'18px'}} id='nom'>{student.tuteur}</strong>, et de <strong><em style={{fontSize:'18px'}}>{student.mere}</em></strong> </p>
+                <p style={{fontSize:'15px'}}><em>from </em></p>
                 
                 <p>est inscrit de façon régulière en <strong></strong>durant l'année scolaire <strong>{student.scolaire}</strong>.</p>
                 <p style={{fontSize:'15px'}}><em> is regularly registered in  during the school year </em></p>
@@ -165,7 +169,7 @@ export default function CertSco() {
                 <p>En foi de quoi le présent Certificat, qui atteste de sa présence effective, est délivré pour servir et valoir ce que de droit.</p>
                 <p style={{fontSize:'15px'}}><em>In witness whereof this schooling certificate which certifies his effective presence, is issued to serve and establish what is required by law.</em></p>
               </div>
-              <div id='dte'style={{ padding: '50px'}}>
+              <div id='dte'style={{ padding: '70px'}}>
                 <p><strong>Bertoua, {getCurrentDate(student.filiere)}</strong> </p>
                 <p><strong>{getFonc(student.filiere)}</strong></p>
               </div>
