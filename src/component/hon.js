@@ -4,6 +4,7 @@ import config from './config';
 import logo from './hon.png';
 import './certificate.css';
 import { PrinterFill } from 'react-bootstrap-icons';
+import sign from './sign.png';
 
 export default function Hon() {
     const [groupedData, setGroupedData] = useState({});
@@ -281,7 +282,7 @@ const getCertContent = (filiere, averages, groupedData, matricule, studentCounts
           <label className="mb-2">Trimestre</label>
           <select id='trim' name="trim" className="form-control" onChange={handleInput}>
             <option value="">Choisir le Timestre</option>
-            <option value="4">Timestre 3</option>
+            <option value="4">Annuel</option>
           </select>
         </div>
         <div className="col-md-1">
@@ -326,14 +327,16 @@ const getCertContent = (filiere, averages, groupedData, matricule, studentCounts
                     <p id="tiEcol">{ecData.nomec}</p>
                     <p id='tiC'>{getTic(groupedData[matricule].eleve.filiere)}</p>
                   </div>
-                  <div id='tex' style={{ padding: '50px' }}>
+                  <div id='tex' style={{ padding: '50px',marginTop: '80px' }}>
                     {getCertContent(groupedData[matricule].eleve.filiere, averages, groupedData, matricule, studentCounts)}
                   </div>
                   <div id='dte'>
                     <p><strong>{getRem(groupedData[matricule].eleve.filiere)}</strong></p>
                     <p><strong>{getFonc(groupedData[matricule].eleve.filiere)}</strong></p>
                   </div>
+                  <p id='remdo'> <img src={`${config.apiBaseUrl}/logo/${ecData.sign}`} style={{width:'90px', height:'80px', objectFit: 'cover'}} alt="" /></p> 
                 </div>
+                  
               )}
             </>
           ))}

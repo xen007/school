@@ -3,7 +3,7 @@ import ReactToPrint from 'react-to-print';
 import config from './config';
 import logo from './format.png';
 import './certificate.css';
-
+import sign from './sign.png';
 export default function Graduation() {
   const [studentData, setStudentData] = useState([]);
   const [record, setRecord] = useState([]);
@@ -150,7 +150,7 @@ export default function Graduation() {
                 </div>
               </div>
               
-              <div id='tex' style={{ padding: '50px', marginTop: '30px' }}>
+              <div id='tex' style={{ padding: '50px' }}>
 
                 <p>Je soussignée Madame <strong>{ecData.responsable}</strong> Directrice de {ecData.nomec},</p>
                 <p style={{fontSize:'15px'}}><em>I, the undersigned Mrs. Headmistress of</em></p>
@@ -168,6 +168,8 @@ export default function Graduation() {
                 <p><strong>Bertoua, {getCurrentDate(student.filiere)}</strong> </p>
                 <p><strong>{getFonc(student.filiere)}</strong></p>
               </div>
+              <p id='remdo'> <img src={`${config.apiBaseUrl}/logo/${ecData.sign}`} style={{width:'90px', height:'80px', objectFit: 'cover'}} /></p> 
+             
               <p id='remd'><strong>{getRem(student.filiere)}</strong></p>
             </div>
           ))}

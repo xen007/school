@@ -40,7 +40,7 @@
 }
 #tex{
   position: absolute;
-  top: 270px;
+  top: 230px;
   left: 50px;
   font-size: 23px;
 }
@@ -67,7 +67,7 @@ p {
 #tiC{
   font-size: 27px;
   padding:10px;
-  color: rgb(15, 15, 104);
+  color: rgb(2, 13, 78);
   font-weight: 700;
   font-family: 'Lucida Handwriting', Georgia, 'Times New Roman', Times, serif;
 }
@@ -80,7 +80,16 @@ p {
   left: 50%;
   transform: translateX(-50%);
   text-align: center;
-  color: green;
+  color: rgb(0, 34, 128);
+  font-family: Ravie ,Georgia, 'Times New Roman', Times, serif;
+}
+#remdo {
+  position: absolute;
+  top: 630px;
+  left: 80%;
+  transform: translateX(-50%);
+  text-align: center;
+  color: rgb(0, 34, 128);
   font-family: Ravie ,Georgia, 'Times New Roman', Times, serif;
 }
 /* certificate.css */

@@ -3,6 +3,7 @@ import ReactToPrint from 'react-to-print';
 import config from './config';
 import logo from './format.png';
 import './certificate.css';
+import sign from './sign.png';
 
 export default function Promotion() {
   const [studentData, setStudentData] = useState([]);
@@ -115,7 +116,7 @@ export default function Promotion() {
           <p>Headmistress of {ecData.nomec},</p>
           <p>Certify that the pupil <strong id='nom'>{student.nom} {student.prenom}</strong></p>
           <p>Born on the <strong><em>{student.dateNaiss}</em></strong> at <strong><em>{student.lieuNaiss}</em></strong> is promoted to <strong><em>Form 1</em></strong> of Secondary school</p>
-          <p>Following his/her brilliant performance in <strong>Class 6</strong> of Primary school during the school year <strong>{student.scolaire}</strong>.</p>
+          <p>Following his/her brilliant performance in <strong>Class 6</strong> of Primary school during school year <strong>{student.scolaire}</strong>.</p>
           <p>To witness it, this certificate is issued to serve the purpose it deserves.</p>
         </>
       );
@@ -186,7 +187,8 @@ export default function Promotion() {
               <div id='dte'>
                 <p><strong>Bertoua, {getCurrentDate(student.filiere)}</strong> </p>
                 <p><strong>{getFonc(student.filiere)}</strong></p>
-              </div>
+              </div>  
+              <p id='remdo'> <img src={`${config.apiBaseUrl}/logo/${ecData.sign}`} style={{width:'90px', height:'80px', objectFit: 'cover'}} /></p> 
               <p id='remd'><strong>{getRem(student.filiere)}</strong></p>
             </div>
           ))}

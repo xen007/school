@@ -34,7 +34,7 @@ if ($data) {
     }
 
     // Verify that the evaluation matches the subject and class
-    $evalCheckQuery = "SELECT * FROM evaluation WHERE id_evaluation = ? AND matiere = ? ";
+    $evalCheckQuery = "SELECT * FROM evaluation WHERE id_evaluation = ? AND matiere = ?";
     $evalCheckStmt = $db_connect->prepare($evalCheckQuery);
     if (!$evalCheckStmt) {
         echo json_encode(['status' => 'error', 'message' => 'Failed to prepare evaluation check query']);
@@ -48,9 +48,17 @@ if ($data) {
         exit();
     }
 
+   
     foreach ($data['markNoteToStore'] as $item) {
-        $matricule = $db_connect->real_escape_string($item['matricule']);
-        $note = isset($item['note']) ? $db_connect->real_escape_string($item['note']) : NULL;
+        if (isset($item['matricule']) && !empty($item['matricule'])) {
+            $matricule = (string) $item['matricule']; // Explicitly cast matricule as string
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Matricule is required and cannot be empty']);
+            exit();
+        }
+
+        // Ensure the note value is handled correctly
+        $note = isset($item['note']) ? $item['note'] : NULL;
 
         // Check if a note already exists for the matricule and evaluation
         $checkNoteQuery = "SELECT * FROM notes WHERE matricule_El = ? AND id_eval = ?";
@@ -63,7 +71,7 @@ if ($data) {
         $checkNoteStmt->execute();
         $noteCheckResult = $checkNoteStmt->get_result();
 
-        // Insert logic if seq is 1 or if no existing record is found
+        // Insert logic if seq is 1 or no existing record is found
         if ($seq == 1 || $noteCheckResult->num_rows == 0) {
             $insertQuery = "INSERT INTO notes (id_matiere, id_eval, classe, sequence, matricule_El, m$seq) VALUES (?, ?, ?, ?, ?, ?)";
             $insertStmt = $db_connect->prepare($insertQuery);
@@ -71,9 +79,9 @@ if ($data) {
                 echo json_encode(['status' => 'error', 'message' => 'Failed to prepare insert query']);
                 exit();
             }
-            $insertStmt->bind_param('iiiiis', $matiere, $evaluation, $classe, $seq, $matricule, $note);
+            $insertStmt->bind_param('iiiiss', $matiere, $evaluation, $classe, $seq, $matricule, $note); // Use 's' for matricule and note
             if (!$insertStmt->execute()) {
-                echo json_encode(['status' => 'error', 'message' => 'Failed to insert data']);
+                echo json_encode(['status' => 'error', 'message' => 'Failed to insert data: ' . $insertStmt->error]);
                 exit();
             }
         } else {
@@ -87,14 +95,21 @@ if ($data) {
                 }
                 $updateStmt->bind_param('ssi', $note, $matricule, $evaluation);
                 if (!$updateStmt->execute()) {
-                    echo json_encode(['status' => 'error', 'message' => 'Failed to update data']);
+                    echo json_encode(['status' => 'error', 'message' => 'Failed to update data: ' . $updateStmt->error]);
                     exit();
                 }
             }
         }
+
+        // Add the successfully processed matricule to the array
+      
     }
 
-    echo json_encode(['status' => 'success', 'message' => 'Notes successfully processed']);
+    // Return success with processed matricules
+    echo json_encode([
+        'status' => 'success',
+        'message' => 'Notes successfully processed',
+    ]);
 } else {
     echo json_encode(['status' => 'error', 'message' => 'No data received']);
 }

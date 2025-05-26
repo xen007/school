@@ -463,7 +463,7 @@ const getAppreciation = (synth, filiere) => {
               <p><i>{ecData.devise}</i></p>
               <p className="fw-bold">
     {formvalue.trim === '4' 
-        ? `Annual ${nomt}` 
+        ? `Annuel/ Annual` 
         : `${getOrdinal(formvalue.trim, groupedData[matricule].eleve.filiere)} ${nomt}`}
 </p>
  <p>Année-scolaire: {'2024-2025'}</p>

@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import logo from './format.png';
 import './certificate.css';
 
+
 const Excell = () => {
   const [groupedData, setGroupedData] = useState({});
   const [averages, setAverages] = useState({});
@@ -235,7 +236,15 @@ if (Object.keys(groupedData).length > 0) {
     return filiere === '1' ? 'FÉLICITATIONS' : 'CONGRATULATIONS';
   };
 
-
+  const getOrdinalEn = (n) => {
+    const s = ["th", "st", "nd", "rd"], v = n % 100;
+    return n + (s[(v - 20) % 10] || s[v] || s[0]);
+  };
+  
+  const getOrdinalFr = (n) => {
+    const s = ["ème", "er", "ème", "ème"], v = n % 100;
+    return n + (s[(v - 20) % 10] || s[v] || s[0]);
+  };
 
 
  return (
@@ -263,7 +272,7 @@ if (Object.keys(groupedData).length > 0) {
           <label className="mb-2">Trimestre</label>
           <select id='trim' name="trim" className="form-control" onChange={handleInput}>
             <option value="">Choisir le Timestre</option>
-            <option value="4">Timestre 3</option>
+            <option value="4">Annuel</option>
           </select>
         </div>
         <div className="col-md-1">
@@ -282,7 +291,7 @@ if (Object.keys(groupedData).length > 0) {
         {ranks.map((matricule, index) => (
           <>
             
-              { (averages[matricule].rank >= 0 && averages[matricule].rank <= 4) && (
+              { (averages[matricule].rank >= 0 && averages[matricule].rank <= 5) && (
 
               <div key={matricule} style={{ pageBreakInside: 'avoid', marginBottom: '10px', height: 'auto' }}>
               <div  className="image-container">
@@ -314,22 +323,25 @@ if (Object.keys(groupedData).length > 0) {
                 </div>
               </div>
               
-              <div id='tex'>
+              <div id='tex' style={{ padding: '50px' }}>
                 <p>DÉCERNÉ à <strong style={{fontSize:'23px'}} id='nom'>{groupedData[matricule].eleve.nom} {groupedData[matricule].eleve.prenom}</strong></p>
                 <p style={{fontSize:'18px'}}><em>AWARDED to</em></p>
                 
-                <p>Pour ses performances scolaires appreciables occupant le rang de 1er de sa classe</p>
-                <p style={{fontSize:'18px'}}><em>For his/her appreciable performance with rank of 1st for his class</em></p>
+                <p>Pour ses performances scolaires appreciables occupant le rang de {getOrdinalFr(averages[matricule]?.rank)} de sa classe <strong> {groupedData[matricule].eleve.libellee_classe} </strong></p>
+                <p style={{fontSize:'18px'}}><em>For his/her appreciable performance with rank of {getOrdinalEn(averages[matricule]?.rank)} for his class {groupedData[matricule].eleve.libellee_classe}</em></p>
                 
                 <p>avec une moyenne annuelle de <strong>{averages[matricule].averageGmoy}</strong>/20</p>
                 <p style={{fontSize:'18px'}}><em>With an annual average of</em></p>
               </div>
-              <div id='dte'>
+              <div id='dte' style={{paddingBottom: '50px'}}>
                 <p><strong>Bertoua, {getCurrentDate(groupedData[matricule].eleve.filiere)}</strong> </p>
-                <p><strong>{getFonc(groupedData[matricule].eleve.filiere)}</strong></p>
+                <p><strong>{getFonc(groupedData[matricule].eleve.filiere)}</strong> </p>
               </div>
-              <p id='remd'><strong>{getRem(groupedData[matricule].eleve.filiere)}</strong></p>
-            </div>
+              <p id='remd'>
+                <strong>{getRem(groupedData[matricule].eleve.filiere)}</strong>
+              </p>
+              <p id='remdo'> <img src={`${config.apiBaseUrl}/logo/${ecData.sign}`} style={{width:'90px', height:'80px', objectFit: 'cover'}} /></p> 
+              </div>
             </div>
             )}
           </>

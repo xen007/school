@@ -3,72 +3,75 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import config from '../component/config';
 
-// Main function
 export default function DateEdit() {
-  // Declaration of constants
-  const [formvalue, setFormvalue] = useState({
+  const [formValue, setFormValue] = useState({
     nomec: '',
     devise: '',
     bp: '',
     contact: '',
+    adresse: '',
   });
-  const [logoVal, setLogo] = useState({ logo: '' });
+  
+  const [logoVal, setLogo] = useState(null);
+  const [signVal, setSign] = useState(null);
+  const [message, setMessage] = useState('');
   const location = useLocation();
-  const data = location.state;
   const { id } = useParams();
   const navigate = useNavigate();
-  const [message, setMessage] = useState('');
 
+  // Handle file uploads properly
   const handlePhoto = (e) => {
-    setLogo({ [e.target.name]: e.target.files[0] });
+    const { name, files } = e.target;
+    if (name === "logo") setLogo(files[0]);
+    if (name === "sign") setSign(files[0]);
   };
 
-  // Handling input information
+  // Handle input changes
   const handleInput = (e) => {
-    setFormvalue({ ...formvalue, [e.target.name]: e.target.value });
+    setFormValue({ ...formValue, [e.target.name]: e.target.value });
   };
 
-  // Function to fetch class information
+  // Fetch existing data
   useEffect(() => {
-    const getnoData = async () => {
-      const requestData = await fetch(`${config.apiBaseUrl}/schoolUp.php/` + id);
-      const responseData = await requestData.json();
-      setFormvalue(responseData);
-      setLogo(responseData);
+    const fetchData = async () => {
+      try {
+        const requestData = await fetch(`${config.apiBaseUrl}/schoolUp.php/${id}`);
+        const responseData = await requestData.json();
+        if (responseData) {
+          setFormValue(responseData);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setMessage("❌ Error loading school details.");
+      }
     };
-    getnoData();
+    fetchData();
   }, [id]);
 
-  // Function to submit the form
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
     const formData = new FormData();
-    formData.append('id', id);
-    formData.append('nomec', formvalue.nomec);
-    formData.append('devise', formvalue.devise);
-    formData.append('bp', formvalue.bp);
-    formData.append('contact', formvalue.contact);
-    if (logoVal.logo) {
-      formData.append('logo', logoVal.logo);
-    }
+    formData.append("id", id);
+    Object.keys(formValue).forEach(key => formData.append(key, formValue[key]));
+    if (logoVal) formData.append("logo", logoVal);
+    if (signVal) formData.append("sign", signVal);
 
     try {
-      const res = await axios({
-        method: 'post',
-        url: `${config.apiBaseUrl}/schoolUp.php`,
-        data: formData,
-        headers: { 'Content-Type': 'multipart/form-data' }
+      const response = await axios.post(`${config.apiBaseUrl}/schoolUp.php`, formData, {
+        headers: { "Content-Type": "multipart/form-data" }
       });
 
-      if (res.data.success) {
-        setMessage(res.data.success);
-        setTimeout(() => {
-          navigate('/settings/');
-        }, 1000);
+      if (response.data.success) {
+        setMessage("✅ Data successfully updated!");
+        setTimeout(() => navigate("/settings/"), 1500);
+      } else {
+        throw new Error("Update failed.");
       }
     } catch (error) {
-      setMessage('Error updating data');
-      console.error('Error:', error);
+      console.error("Error updating data:", error);
+      setMessage("❌ Error updating school details.");
     }
   };
 
@@ -76,35 +79,29 @@ export default function DateEdit() {
     <main className="main-container">
       <div className="col-md-12 mt-4">
         <h2>Modifier</h2>
-        <p className="text-success">{message}</p>
+        {message && <p className={`text-${message.includes("Error") ? "danger" : "success"}`}>{message}</p>}
         <form onSubmit={handleSubmit}>
           <div className="col-sm-12">
             <div className="row mb-3">
-              <div className="form-group col-md-5">
-                <label className="mb-2">Nom</label>
-                <input type="text" className="form-control" name="nomec" id="nomec" value={formvalue.nomec} onChange={handleInput} />
-              </div>
-              <div className="form-group col-md-4">
-                <label className="mb-2">Devise</label>
-                <input type="text" className="form-control" name="devise" id="devise" value={formvalue.devise} onChange={handleInput} />
-              </div>
-              <div className="form-group col-md-4">
-                <label className="mb-2">BP</label>
-                <input type="text" className="form-control" name="bp" id="bp" value={formvalue.bp} onChange={handleInput} />
-              </div>
-              <div className="form-group col-md-4">
-                <label className="mb-2">Contact</label>
-                <input type="text" className="form-control" name="contact" id="contact" value={formvalue.contact} onChange={handleInput} />
-              </div>
+              {["nomec", "devise", "bp", "contact", "adresse"].map((field, idx) => (
+                <div key={idx} className="form-group col-md-4">
+                  <label className="mb-2">{field.toUpperCase()}</label>
+                  <input type="text" className="form-control" name={field} value={formValue[field]} onChange={handleInput} />
+                </div>
+              ))}
               <div className="form-group col-md-3">
                 <label className="mb-2">Logo</label>
-                <input type="file" className="form-control" name="logo" id="logo" onChange={handlePhoto} />
+                <input type="file" className="form-control" name="logo" onChange={handlePhoto} />
+              </div>
+              <div className="form-group col-md-3">
+                <label className="mb-2">Scan Signature</label>
+                <input type="file" className="form-control" name="sign" onChange={handlePhoto} />
               </div>
             </div>
           </div>
           <div className='buttons'>
-            <button className='btn btn-secondary m-3' onClick={() => { navigate('/settings/') }}>Retour</button>
-            <button type='submit' name='submit' className="btn btn-success">Définir</button>
+            <button className='btn btn-secondary m-3' onClick={() => navigate('/settings/')}>Retour</button>
+            <button type='submit' className="btn btn-success">Définir</button>
           </div>
         </form>
       </div>

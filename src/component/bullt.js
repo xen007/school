@@ -66,9 +66,9 @@ const Bullt = ({ groupedData, matricule, calculateSum, getAppreciation, averages
         <table className='table table-striped table-bordered table-sm' style={{ width: '100%', tableLayout: 'auto' }}>
           <thead>
             <tr style={{ fontSize: '9px' }}>
-              <th>M1</th>
-              <th>M2</th>
-              <th>M3</th>
+              <th>T1</th>
+              <th>T2</th>
+              <th>T3</th>
               <th>Résumé/Summary</th>
               <th>Stat Classe/Class</th>
               <th>Enseignant/Teacher</th>

@@ -151,9 +151,8 @@ export default function CertSco() {
                 </div>
               </div>
               
-              <div id='tex' style={{ padding: '30px', marginTop: '30px' }}>
+              <div id='tex' style={{ padding: '30px', marginTop: '70px' }}>
                
-                
                 <p>Je soussignée Madame <strong>{ecData.responsable}</strong> Directrice de {ecData.nomec},</p>
                 <p style={{fontSize:'15px'}}><em>I, the undersigned Mrs. Headmistress of</em></p>
 
